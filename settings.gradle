@@ -1,1 +1,3 @@
-include ':sample-extension'
+include ':tiktok-eapi-extension'
+include 'tiktok-eapi'
+

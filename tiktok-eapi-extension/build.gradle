@@ -7,10 +7,16 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.16.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.16.0'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
     compile (
             'com.amazonaws:aws-lambda-java-core:1.2.0',
             'com.amazonaws:aws-lambda-java-events:2.2.7',
-            'com.mparticle:java-sdk:+'
+            'com.mparticle:java-sdk:+',
+            'org.apache.httpcomponents:httpclient:4.5.14',
+            'org.apache.httpcomponents:httpcore:4.4.16'
     )
 
     // JUnit 5 dependencies for public test-writing API, and test engine, respectively.

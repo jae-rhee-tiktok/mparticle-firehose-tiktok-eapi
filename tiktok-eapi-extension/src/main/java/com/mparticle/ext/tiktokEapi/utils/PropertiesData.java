@@ -97,29 +97,29 @@ public class PropertiesData {
     public static PropertiesContext buildPropertiesContextData(ProductActionEvent event) {
         PropertiesContext propertiesData = new PropertiesContext();
 
-        propertiesData.contentType = event.getRequest().getAccount().getStringSetting(AccountSettings.SETTINGS_CONTENT_TYPE, true, "product");
+        propertiesData.setContentType(event.getRequest().getAccount().getStringSetting(AccountSettings.SETTINGS_CONTENT_TYPE, true, "product"));
 
         List<Content> contentArr = new ArrayList<>();
 
         for (Product product : event.getProducts()) {
             Content content = new Content();
-            content.contentId = product.getId();
-            content.contentCategory = product.getCategory();
-            content.contentName = product.getName();
-            content.price = product.getPrice().floatValue();
-            content.quantity = product.getQuantity().intValue();
-            content.brand = product.getBrand();
+            content.setContentId(product.getId());
+            content.setContentCategory(product.getCategory());
+            content.setContentName(product.getName());
+            content.setPrice(product.getPrice().floatValue());
+            content.setQuantity(product.getQuantity().intValue());
+            content.setBrand(product.getBrand());
 
             contentArr.add(content);
         }
 
-        propertiesData.contents = contentArr;
-        propertiesData.currency = event.getCurrencyCode();
-        propertiesData.value = event.getTotalAmount().floatValue();
-        propertiesData.orderId = event.getTransactionId();
-        propertiesData.shopId = event.getAffiliation(); // TODO: ???
-        propertiesData.description = event.getAttributes().get("description"); // TODO: ???
-        propertiesData.query = event.getAttributes().get("query"); // TODO: ???
+        propertiesData.setContents(contentArr);
+        propertiesData.setCurrency(event.getCurrencyCode());
+        propertiesData.setValue(event.getTotalAmount().floatValue());
+        propertiesData.setOrderId(event.getTransactionId());
+        propertiesData.setShopId(event.getAffiliation()); // TODO: ???
+        propertiesData.setDescription(event.getAttributes().get("description")); // TODO: ???
+        propertiesData.setQuery(event.getAttributes().get("query")); // TODO: ???
 
         return propertiesData;
     }
@@ -127,16 +127,16 @@ public class PropertiesData {
     public static PropertiesContext buildPropertiesContextData(CustomEvent event) {
         PropertiesContext propertiesData = new PropertiesContext();
 
-        propertiesData.contentType = event.getRequest().getAccount().getStringSetting(AccountSettings.SETTINGS_CONTENT_TYPE, true, "product");
+        propertiesData.setContentType(event.getRequest().getAccount().getStringSetting(AccountSettings.SETTINGS_CONTENT_TYPE, true, "product"));
         List<Content> contentsArr = buildProductsFromAttributes(event.getAttributes().get("products"));
 
-        propertiesData.contents = contentsArr;
-        propertiesData.currency = event.getAttributes().get("currency");
-        propertiesData.value = Float.parseFloat(event.getAttributes().get("value"));
-        propertiesData.orderId = event.getAttributes().get("orderId"); // TODO: ???
-        propertiesData.shopId = event.getAttributes().get("shopId"); // TODO: ???
-        propertiesData.description = event.getAttributes().get("description"); // TODO: ???
-        propertiesData.query = event.getAttributes().get("query"); // TODO: ???
+        propertiesData.setContents(contentsArr);
+        propertiesData.setCurrency(event.getAttributes().get("currency"));
+        propertiesData.setValue(Float.parseFloat(event.getAttributes().get("value")));
+        propertiesData.setOrderId(event.getAttributes().get("orderId")); // TODO: ???
+        propertiesData.setShopId(event.getAttributes().get("shopId")); // TODO: ???
+        propertiesData.setDescription(event.getAttributes().get("description")); // TODO: ???
+        propertiesData.setQuery(event.getAttributes().get("query")); // TODO: ???
 
         return propertiesData;
     }
@@ -150,12 +150,12 @@ public class PropertiesData {
 
             for (Product product : productsArr) {
                 Content content = new Content();
-                content.contentId = product.getId();
-                content.contentCategory = product.getCategory();
-                content.contentName = product.getName();
-                content.price = product.getPrice().floatValue();
-                content.quantity = product.getQuantity().intValue();
-                content.brand = product.getBrand();
+                content.setContentId(product.getId());
+                content.setContentCategory(product.getCategory());
+                content.setContentName(product.getName());
+                content.setPrice(product.getPrice().floatValue());
+                content.setQuantity(product.getQuantity().intValue());
+                content.setBrand(product.getBrand());
 
                 contentsArr.add(content);
             }

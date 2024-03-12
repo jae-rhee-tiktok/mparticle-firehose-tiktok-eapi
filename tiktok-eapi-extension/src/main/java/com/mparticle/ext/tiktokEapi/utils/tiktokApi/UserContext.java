@@ -12,7 +12,7 @@ public class UserContext {
     @SerializedName("phone")
     public List<String> phone;
 
-    @SerializedName("extId")
+    @SerializedName("external_id")
     public List<String> extId;
 
     @SerializedName("ip")
@@ -24,10 +24,10 @@ public class UserContext {
     @SerializedName("locale")
     public String locale;
 
-    @SerializedName("clickId")
+    @SerializedName("ttclid")
     public String clickId;
 
-    @SerializedName("cookieId")
+    @SerializedName("ttp")
     public String cookieId;
 
     @SerializedName("idfa")

@@ -5,37 +5,116 @@ import com.google.gson.annotations.SerializedName;
 public class EventDataContext {
 
     @SerializedName("event")
-    public String event;
+    private String event;
 
     @SerializedName("event_time")
-    public int eventTime;
+    private int eventTime;
 
     @SerializedName("event_id")
-    public String eventId;
+    private String eventId;
 
     @SerializedName("user")
-    public UserContext user;
+    private UserContext user;
 
     @SerializedName("properties")
-    public PropertiesContext properties;
+    private PropertiesContext properties;
 
     @SerializedName("page")
-    public PageContext page;
+    private PageContext page;
 
     @SerializedName("app")
-    public AppContext app;
+    private AppContext app;
 
     @SerializedName("ad")
-    public AdContext ad;
+    private AdContext ad;
 
     @SerializedName("limited_data_use")
-    public boolean ldu;
+    private boolean ldu;
 
     @SerializedName("lead")
-    public LeadContext lead;
+    private LeadContext lead;
 
     public EventDataContext() {
 
     }
 
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    public int getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(int eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    public UserContext getUser() {
+        return user;
+    }
+
+    public void setUser(UserContext user) {
+        this.user = user;
+    }
+
+    public PropertiesContext getProperties() {
+        return properties;
+    }
+
+    public void setProperties(PropertiesContext properties) {
+        this.properties = properties;
+    }
+
+    public PageContext getPage() {
+        return page;
+    }
+
+    public void setPage(PageContext page) {
+        this.page = page;
+    }
+
+    public AppContext getApp() {
+        return app;
+    }
+
+    public void setApp(AppContext app) {
+        this.app = app;
+    }
+
+    public AdContext getAd() {
+        return ad;
+    }
+
+    public void setAd(AdContext ad) {
+        this.ad = ad;
+    }
+
+    public boolean isLdu() {
+        return ldu;
+    }
+
+    public void setLdu(boolean ldu) {
+        this.ldu = ldu;
+    }
+
+    public LeadContext getLead() {
+        return lead;
+    }
+
+    public void setLead(LeadContext lead) {
+        this.lead = lead;
+    }
 }

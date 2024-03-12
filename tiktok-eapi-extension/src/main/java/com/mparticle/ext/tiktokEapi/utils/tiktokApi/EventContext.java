@@ -7,18 +7,46 @@ import java.util.List;
 public class EventContext {
 
     @SerializedName("event_source")
-    public String eventSource;
+    private String eventSource;
 
     @SerializedName("event_source_id")
-    public String eventSourceId;
+    private String eventSourceId;
 
     @SerializedName("partner_name")
-    public static final String partnerName = "MParticle";
+    private static final String partnerName = "MParticle";
 
     @SerializedName("data")
-    public List<EventDataContext> data;
+    private List<EventDataContext> data;
 
     public EventContext() {
 
+    }
+
+    public static String getPartnerName() {
+        return partnerName;
+    }
+
+    public String getEventSource() {
+        return eventSource;
+    }
+
+    public void setEventSource(String eventSource) {
+        this.eventSource = eventSource;
+    }
+
+    public String getEventSourceId() {
+        return eventSourceId;
+    }
+
+    public void setEventSourceId(String eventSourceId) {
+        this.eventSourceId = eventSourceId;
+    }
+
+    public List<EventDataContext> getData() {
+        return data;
+    }
+
+    public void setData(List<EventDataContext> data) {
+        this.data = data;
     }
 }

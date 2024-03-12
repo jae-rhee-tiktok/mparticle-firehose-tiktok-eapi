@@ -26,11 +26,7 @@ public class UserData {
                         emailArray.add(userIdentity.getValue());
                         break;
                     case MOBILE_NUMBER:
-                        phoneArray.add(userIdentity.getValue());
-                        break;
                     case PHONE_NUMBER_2:
-                        phoneArray.add(userIdentity.getValue());
-                        break;
                     case PHONE_NUMBER_3:
                         phoneArray.add(userIdentity.getValue());
                         break;
@@ -44,19 +40,19 @@ public class UserData {
             userData.phone = phoneArray;
             userData.extId = extIdArray;
 
-            if (eventSource.toLowerCase().equals("web")) {
+            if (eventSource.equalsIgnoreCase("web")) {
                 userData.clickId = "";
                 userData.cookieId = "";
             }
 
-            if (eventSource.toLowerCase().equals("app")) {
+            if (eventSource.equalsIgnoreCase("app")) {
                 userData.idfa = "";
                 userData.idfv = "";
                 userData.gaid = "";
                 userData.attStatus = "";
             }
 
-            if (eventSource.toLowerCase().equals("web") || eventSource.toLowerCase().equals("app")) {
+            if (eventSource.equalsIgnoreCase("web") || eventSource.equalsIgnoreCase("app")) {
                 userData.ip = "";
                 userData.userAgent = "";
                 userData.locale = "";

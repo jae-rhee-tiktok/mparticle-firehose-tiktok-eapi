@@ -4,23 +4,71 @@ import com.google.gson.annotations.SerializedName;
 
 public class Content {
     @SerializedName("price")
-    public float price;
+    private float price;
     @SerializedName("quantity")
-    public int quantity;
+    private int quantity;
 
     @SerializedName("content_id")
-    public String contentId;
+    private String contentId;
 
     @SerializedName("content_category")
-    public String contentCategory;
+    private String contentCategory;
 
     @SerializedName("content_name")
-    public String contentName;
+    private String contentName;
 
     @SerializedName("brand")
-    public String brand;
+    private String brand;
 
     public Content() {
 
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
+    }
+
+    public String getContentCategory() {
+        return contentCategory;
+    }
+
+    public void setContentCategory(String contentCategory) {
+        this.contentCategory = contentCategory;
+    }
+
+    public String getContentName() {
+        return contentName;
+    }
+
+    public void setContentName(String contentName) {
+        this.contentName = contentName;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

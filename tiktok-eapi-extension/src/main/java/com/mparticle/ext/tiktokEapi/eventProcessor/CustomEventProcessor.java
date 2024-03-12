@@ -17,10 +17,10 @@ public class CustomEventProcessor extends EventProcessor {
         CustomEvent customEvent = ((CustomEvent)event);
         String eventName = customEvent.getName().toLowerCase();
         switch (customEvent.getCustomType()) { // TODO: find default mappings
-            case MEDIA: // TODO: find default mappings
+//            case MEDIA: // TODO: find default mappings
             case SEARCH:
                 return EventName.Name.Search.toString();
-            case SOCIAL: // TODO: find default mappings
+//            case SOCIAL: // TODO: find default mappings
             case UNKNOWN: // TODO: find default mappings
                 switch (eventName) {
                     case "add_payment_info":
@@ -55,13 +55,15 @@ public class CustomEventProcessor extends EventProcessor {
                     case "subscribe":
                         return EventName.Name.Subscribe.toString();
                 }
-            case LOCATION: // TODO: find default mappings
-            case NAVIGATION: // TODO: find default mappings
-            case TRANSACTION: // TODO: find default mappings
-            case USER_CONTENT: // TODO: find default mappings
-            case USER_PREFERENCE: // TODO: find default mappings
+//            case LOCATION: // TODO: find default mappings
+//            case NAVIGATION: // TODO: find default mappings
+//            case TRANSACTION: // TODO: find default mappings
+//            case USER_CONTENT: // TODO: find default mappings
+//            case USER_PREFERENCE: // TODO: find default mappings
+            default:
+                return eventName;
+
         }
-        return eventName;
     }
 
 }

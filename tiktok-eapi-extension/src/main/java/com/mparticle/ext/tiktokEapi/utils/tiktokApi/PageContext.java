@@ -5,12 +5,28 @@ import com.google.gson.annotations.SerializedName;
 public class PageContext {
 
     @SerializedName("url")
-    public String url;
+    private String url;
 
     @SerializedName("referrer")
-    public String referrer;
+    private String referrer;
 
     public PageContext() {
 
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getReferrer() {
+        return referrer;
+    }
+
+    public void setReferrer(String referrer) {
+        this.referrer = referrer;
     }
 }

@@ -48,32 +48,32 @@ public class EventProcessor {
         EventContext eventPayload = new EventContext();
 
         Account accountInfo = event.getRequest().getAccount();
-        eventPayload.eventSource = accountInfo.getStringSetting(AccountSettings.SETTINGS_EVENT_SOURCE, true, "web");
-        eventPayload.eventSourceId = accountInfo.getStringSetting(AccountSettings.SETTINGS_EVENT_SOURCE_ID, true, null);
+        eventPayload.setEventSource(accountInfo.getStringSetting(AccountSettings.SETTINGS_EVENT_SOURCE, true, "web"));
+        eventPayload.setEventSourceId(accountInfo.getStringSetting(AccountSettings.SETTINGS_EVENT_SOURCE_ID, true, null));
         List<EventDataContext> dataArray = new ArrayList<>();
 
         EventDataContext eventData = new EventDataContext();
-        eventData.event = getTikTokEventName();
-        eventData.eventTime = (int)event.getTimestamp();
-        eventData.eventId = event.getId().toString(); // TODO: check dual setup values
-        eventData.user = userContextData;
-        eventData.properties = propertiesContextData;
+        eventData.setEvent(getTikTokEventName());
+        eventData.setEventTime((int)event.getTimestamp());
+        eventData.setEventId(event.getId().toString()); // TODO: check dual setup values
+        eventData.setUser(userContextData);
+        eventData.setProperties(propertiesContextData);
 
-        if(eventPayload.eventSource.equalsIgnoreCase("web")) {
-            eventData.page = pageContextData;
+        if(eventPayload.getEventSource().equalsIgnoreCase("web")) {
+            eventData.setPage(pageContextData);
         }
 
-        if(eventPayload.eventSource.equalsIgnoreCase("app")) {
-            eventData.app = appContextData;
-            eventData.ad = adContextData;
+        if(eventPayload.getEventSource().equalsIgnoreCase("app")) {
+            eventData.setApp(appContextData);
+            eventData.setAd(adContextData);
         }
 
-        if(eventPayload.eventSource.equalsIgnoreCase("crm")) {
-            eventData.lead = leadContextData;
+        if(eventPayload.getEventSource().equalsIgnoreCase("crm")) {
+            eventData.setLead(leadContextData);
         }
 
         dataArray.add(eventData);
-        eventPayload.data = dataArray;
+        eventPayload.setData(dataArray);
 
         Gson gson = new Gson();
         return gson.toJson(eventPayload);

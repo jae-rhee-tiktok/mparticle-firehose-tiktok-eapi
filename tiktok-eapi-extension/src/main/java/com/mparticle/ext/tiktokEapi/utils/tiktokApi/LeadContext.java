@@ -4,12 +4,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class LeadContext {
     @SerializedName("lead_id")
-    public String leadId;
+    private String leadId;
 
     @SerializedName("lead_event_source")
-    public String leadEventSource;
+    private String leadEventSource;
 
     public LeadContext() {
 
+    }
+
+    public String getLeadId() {
+        return leadId;
+    }
+
+    public void setLeadId(String leadId) {
+        this.leadId = leadId;
+    }
+
+    public String getLeadEventSource() {
+        return leadEventSource;
+    }
+
+    public void setLeadEventSource(String leadEventSource) {
+        this.leadEventSource = leadEventSource;
     }
 }

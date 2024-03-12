@@ -4,8 +4,6 @@ import com.mparticle.ext.tiktokEapi.utils.*;
 import com.mparticle.sdk.model.eventprocessing.CustomEvent;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.EventName;
 
-import static com.mparticle.ext.tiktokEapi.utils.LeadData.buildLeadContextData;
-
 public class CustomEventProcessor extends EventProcessor {
 
     public CustomEventProcessor(CustomEvent event) {
@@ -19,7 +17,7 @@ public class CustomEventProcessor extends EventProcessor {
         }
 
         if (checkCrmSource()) {
-            this.setLeadContextData(buildLeadContextData(event));
+            this.setLeadContextData(LeadData.buildLeadContextData(event));
         }
 
         UserData.updateUserData(event, getUserContextData());

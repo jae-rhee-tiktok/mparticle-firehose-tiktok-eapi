@@ -3,7 +3,6 @@ package com.mparticle.ext.tiktokEapi.eventProcessor;
 import com.mparticle.ext.tiktokEapi.utils.*;
 import com.mparticle.sdk.model.eventprocessing.ProductActionEvent;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.EventName;
-import com.mparticle.sdk.model.eventprocessing.consent.CCPAConsent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

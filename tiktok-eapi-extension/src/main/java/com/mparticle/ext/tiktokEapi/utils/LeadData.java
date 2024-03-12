@@ -2,7 +2,6 @@ package com.mparticle.ext.tiktokEapi.utils;
 
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.LeadContext;
 import com.mparticle.sdk.model.eventprocessing.CustomEvent;
-import com.mparticle.sdk.model.eventprocessing.ImpressionEvent;
 
 import java.util.Map;
 
@@ -16,13 +15,6 @@ public class LeadData {
     }
 
     public static LeadContext buildLeadContextData(CustomEvent event) {
-        Map<String, String> eventAttributes = event.getAttributes();
-        LeadContext leadContext = new LeadContext();
-        setLeadContextData(eventAttributes, leadContext);
-        return leadContext;
-    }
-
-    public static LeadContext buildLeadContextData(ImpressionEvent event) {
         Map<String, String> eventAttributes = event.getAttributes();
         LeadContext leadContext = new LeadContext();
         setLeadContextData(eventAttributes, leadContext);

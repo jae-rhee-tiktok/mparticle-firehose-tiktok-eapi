@@ -17,14 +17,9 @@ public class TikTokApiClient {
     final static Logger logger = LogManager.getLogger(TikTokApiClient.class);
 
     private static final String url = "https://business-api.tiktok.com/open_api/v1.3/event/track/";
-//    private final String accessToken;
-//    private final String eventSourceId;
-//    private final String eventSource;
 
     public TikTokApiClient() {
-//        this.accessToken = accessToken;
-//        this.eventSource = eventSource;
-//        this.eventSourceId = eventSourceId;
+
     }
 
     public void sendPostRequest(String accessToken, String payload) throws IOException {
@@ -37,11 +32,11 @@ public class TikTokApiClient {
         post.setEntity(reqBodyString);
 
         try {
-//            CloseableHttpClient httpClient = HttpClients.createDefault();
             CloseableHttpClient httpClient = HttpClientBuilder.create()
                     .setRetryHandler(new DefaultHttpRequestRetryHandler(5, false))
                     .build();
             CloseableHttpResponse response = httpClient.execute(post);
+
             // handle result
             String result = EntityUtils.toString(response.getEntity());
             logger.info("sendRequest res: " + result);

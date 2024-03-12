@@ -1,6 +1,5 @@
 package com.mparticle.ext.tiktokEapi.utils;
 
-import com.mparticle.ext.tiktokEapi.utils.tiktokApi.AdContext;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.AppContext;
 import com.mparticle.sdk.model.eventprocessing.*;
 

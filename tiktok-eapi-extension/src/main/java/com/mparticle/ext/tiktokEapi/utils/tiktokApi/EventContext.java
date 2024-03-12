@@ -2,6 +2,8 @@ package com.mparticle.ext.tiktokEapi.utils.tiktokApi;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class EventContext {
 
     @SerializedName("event_source")
@@ -14,7 +16,7 @@ public class EventContext {
     public static final String partnerName = "MParticle";
 
     @SerializedName("data")
-    public String data;
+    public List<EventDataContext> data;
 
     public EventContext() {
 

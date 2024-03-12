@@ -44,13 +44,14 @@ public class EventProcessor {
     }
 
     public String buildEventPayload() {
+
         EventContext eventPayload = new EventContext();
 
-        Account acc = event.getRequest().getAccount();
-        eventPayload.eventSource = acc.getStringSetting(AccountSettings.SETTINGS_EVENT_SOURCE, true, "web");
-        eventPayload.eventSourceId = acc.getStringSetting(AccountSettings.SETTINGS_EVENT_SOURCE_ID, true, null);
+        Account accountInfo = event.getRequest().getAccount();
+        eventPayload.eventSource = accountInfo.getStringSetting(AccountSettings.SETTINGS_EVENT_SOURCE, true, "web");
+        eventPayload.eventSourceId = accountInfo.getStringSetting(AccountSettings.SETTINGS_EVENT_SOURCE_ID, true, null);
+        List<EventDataContext> dataArray = new ArrayList<>();
 
-        List<EventDataContext> eventDataArray = new ArrayList<>();
         EventDataContext eventData = new EventDataContext();
         eventData.event = getTikTokEventName();
         eventData.eventTime = (int)event.getTimestamp();
@@ -70,6 +71,9 @@ public class EventProcessor {
         if(eventPayload.eventSource.equalsIgnoreCase("crm")) {
             eventData.lead = leadContextData;
         }
+
+        dataArray.add(eventData);
+        eventPayload.data = dataArray;
 
         Gson gson = new Gson();
         return gson.toJson(eventPayload);

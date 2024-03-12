@@ -22,7 +22,7 @@ public class ProductActionEventProcessor extends EventProcessor {
         switch (action) {
             case CLICK:
                 return EventName.Name.ClickButton.toString();
-            case REFUND: // TODO: find default mappings
+//            case REFUND: // TODO: find default mappings
             case CHECKOUT:
                 return EventName.Name.InitiateCheckout.toString();
             case PURCHASE:
@@ -33,9 +33,9 @@ public class ProductActionEventProcessor extends EventProcessor {
                 return EventName.Name.ViewContent.toString();
             case ADD_TO_WISHLIST:
                 return EventName.Name.AddToWishlist.toString();
-            case CHECKOUT_OPTION: // TODO: find default mappings
-            case REMOVE_FROM_CART: // TODO: find default mappings
-            case REMOVE_FROM_WISH_LIST: // TODO: find default mappings
+//            case CHECKOUT_OPTION: // TODO: find default mappings
+//            case REMOVE_FROM_CART: // TODO: find default mappings
+//            case REMOVE_FROM_WISH_LIST: // TODO: find default mappings
             default:
                 return action.toString();
         }

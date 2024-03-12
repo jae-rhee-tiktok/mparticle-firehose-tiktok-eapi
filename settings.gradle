@@ -1,3 +1,2 @@
 include ':tiktok-eapi-extension'
-include 'tiktok-eapi'
 

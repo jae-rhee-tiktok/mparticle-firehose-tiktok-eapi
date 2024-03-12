@@ -28,7 +28,7 @@ jdoe-mac:firehose-sample jdoe$ ./gradlew clean test
 :sample-extension:testClasses
 :sample-extension:test
 
-com.mparticle.ext.sample.SampleExtensionTest > testProcessRegistrationRequest STANDARD_OUT
+com.mparticle.ext.tiktokEapi.SampleExtensionTest > testProcessRegistrationRequest STANDARD_OUT
 
     Please send this JSON to mParticle:
 

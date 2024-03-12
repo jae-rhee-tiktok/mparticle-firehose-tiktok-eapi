@@ -1,7 +1,7 @@
 package com.mparticle.ext.tiktokEapi;
 
+import com.mparticle.ext.tiktokEapi.eventProcessor.*;
 import com.mparticle.ext.tiktokEapi.utils.AccountSettings;
-import com.mparticle.ext.tiktokEapi.utils.TikTokApiClient;
 import com.mparticle.sdk.model.eventprocessing.notification.CCPAConsentStateNotification;
 import com.mparticle.sdk.model.eventprocessing.notification.GDPRConsentStateNotification;
 import com.mparticle.sdk.MessageProcessor;
@@ -183,70 +183,100 @@ public class TiktokEapiExtension extends MessageProcessor {
 
     @Override
     public void processAttributionEvent(AttributionEvent event) throws IOException {
+
+        AttributionEventProcessor attributionEventProcessor = new AttributionEventProcessor(event);
+        attributionEventProcessor.execute();
+
         super.processAttributionEvent(event);
     }
 
     @Override
     public void processImpressionEvent(ImpressionEvent event) throws IOException {
+
+        ImpressionEventProcessor impressionEventProcessor = new ImpressionEventProcessor(event);
+        impressionEventProcessor.execute();
+
         super.processImpressionEvent(event);
     }
 
     @Override
     public void processPromotionActionEvent(PromotionActionEvent event) throws IOException {
+
+        PromotionActionEventProcessor promotionActionEventProcessor = new PromotionActionEventProcessor(event);
+        promotionActionEventProcessor.execute();
+
         super.processPromotionActionEvent(event);
     }
 
     @Override
     public void processProductActionEvent(ProductActionEvent event) throws IOException {
 
-        try {
-            TikTokApiClient tikTokApiClient = new TikTokApiClient(event);
-            tikTokApiClient.sendRequest("");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ProductActionEventProcessor productActionEventProcessor = new ProductActionEventProcessor(event);
+        productActionEventProcessor.execute();
 
         super.processProductActionEvent(event);
     }
 
     @Override
     public void processPushMessageOpenEvent(PushMessageOpenEvent event) throws IOException {
+
+        PushMessageOpenEventProcessor pushMessageOpenEventProcessor = new PushMessageOpenEventProcessor(event);
+        pushMessageOpenEventProcessor.execute();
+
         super.processPushMessageOpenEvent(event);
     }
 
     @Override
     public void processApplicationStateTransitionEvent(ApplicationStateTransitionEvent event) throws IOException {
+
+        ApplicationStateTransitionEventProcessor applicationStateTransitionEventProcessor = new ApplicationStateTransitionEventProcessor(event);
+        applicationStateTransitionEventProcessor.execute();
+
         super.processApplicationStateTransitionEvent(event);
     }
 
     @Override
     public void processSessionStartEvent(SessionStartEvent event) throws IOException {
+
+        SessionStartEventProcessor sessionStartEventProcessor = new SessionStartEventProcessor(event);
+        sessionStartEventProcessor.execute();
+
         super.processSessionStartEvent(event);
     }
 
     @Override
     public void processSessionEndEvent(SessionEndEvent event) throws IOException {
+
+        SessionEndEventProcessor sessionEndEventProcessor = new SessionEndEventProcessor(event);
+        sessionEndEventProcessor.execute();
+
         super.processSessionEndEvent(event);
     }
 
     @Override
     public void processCustomEvent(CustomEvent event) throws IOException {
-        try {
-            TikTokApiClient tikTokApiClient = new TikTokApiClient(event);
-            tikTokApiClient.sendRequest("");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        CustomEventProcessor customEventProcessor = new CustomEventProcessor(event);
+        customEventProcessor.execute();
+
         super.processCustomEvent(event);
     }
 
     @Override
     public void processScreenViewEvent(ScreenViewEvent event) throws IOException {
+
+        ScreenViewEventProcessor screenViewEventProcessor = new ScreenViewEventProcessor(event);
+        screenViewEventProcessor.execute();
+
         super.processScreenViewEvent(event);
     }
 
     @Override
     public void processErrorEvent(ErrorEvent event) throws IOException {
+
+        ErrorEventProcessor errorEventProcessor = new ErrorEventProcessor(event);
+        errorEventProcessor.execute();
+
         super.processErrorEvent(event);
     }
 

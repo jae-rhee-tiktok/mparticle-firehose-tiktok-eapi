@@ -1,4 +1,4 @@
-package com.mparticle.tiktokEapi;
+package com.mparticle.ext.tiktokEapi.utils.tiktokApi;
 
 import com.google.gson.annotations.SerializedName;
 

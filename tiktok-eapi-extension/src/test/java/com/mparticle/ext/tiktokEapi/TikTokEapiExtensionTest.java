@@ -1,4 +1,4 @@
-package com.mparticle.ext.sample;
+package com.mparticle.ext.tiktokEapi;
 
 import com.mparticle.sdk.model.MessageSerializer;
 import com.mparticle.sdk.model.registration.ModuleRegistrationRequest;
@@ -10,14 +10,14 @@ import org.junit.jupiter.api.Test;
  *
  * These tests can be run by executing the 'test' gradle task via `./gradlew test`
  */
-public class SampleExtensionTest  {
+public class TikTokEapiExtensionTest  {
 
     MessageSerializer serializer = new MessageSerializer();
 
     @Test
     public void testProcessRegistrationRequest() throws Exception {
-        SampleExtension sampleExtension = new SampleExtension();
-        ModuleRegistrationResponse response = sampleExtension.processRegistrationRequest(new ModuleRegistrationRequest());
+        TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
+        ModuleRegistrationResponse response = tiktokEapiExtension.processRegistrationRequest(new ModuleRegistrationRequest());
         System.out.println();
         System.out.println("Please send this JSON to mParticle:");
         System.out.println();

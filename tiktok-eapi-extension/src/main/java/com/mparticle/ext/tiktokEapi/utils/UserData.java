@@ -2,7 +2,7 @@ package com.mparticle.ext.tiktokEapi.utils;
 
 import com.mparticle.sdk.model.eventprocessing.Event;
 import com.mparticle.sdk.model.eventprocessing.UserIdentity;
-import com.mparticle.tiktokEapi.UserContext;
+import com.mparticle.ext.tiktokEapi.utils.tiktokApi.UserContext;
 
 import java.util.ArrayList;
 import java.util.List;

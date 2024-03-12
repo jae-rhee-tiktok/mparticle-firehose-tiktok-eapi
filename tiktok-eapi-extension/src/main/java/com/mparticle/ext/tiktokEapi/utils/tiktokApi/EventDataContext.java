@@ -1,14 +1,17 @@
-package com.mparticle.tiktokEapi;
+package com.mparticle.ext.tiktokEapi.utils.tiktokApi;
 
 import com.google.gson.annotations.SerializedName;
 
 public class EventDataContext {
 
     @SerializedName("event")
-    public String eventSource;
+    public String event;
 
     @SerializedName("event_time")
-    public String eventSourceId;
+    public int eventTime;
+
+    @SerializedName("event_id")
+    public String eventId;
 
     @SerializedName("user")
     public UserContext user;

@@ -30,6 +30,9 @@ public class PropertiesContext {
     @SerializedName("shop_id")
     private String shopId;
 
+    @SerializedName("promotions")
+    private List<Promotion> promotions;
+
     public PropertiesContext() {
 
     }
@@ -96,5 +99,13 @@ public class PropertiesContext {
 
     public void setShopId(String shopId) {
         this.shopId = shopId;
+    }
+
+    public List<Promotion> getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(List<Promotion> promotions) {
+        this.promotions = promotions;
     }
 }

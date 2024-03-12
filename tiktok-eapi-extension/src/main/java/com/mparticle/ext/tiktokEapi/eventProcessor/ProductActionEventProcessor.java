@@ -1,28 +1,36 @@
 package com.mparticle.ext.tiktokEapi.eventProcessor;
 
-import com.mparticle.ext.tiktokEapi.utils.AccountSettings;
-import com.mparticle.ext.tiktokEapi.utils.PropertiesData;
-import com.mparticle.ext.tiktokEapi.utils.TikTokApiClient;
+import com.mparticle.ext.tiktokEapi.utils.*;
 import com.mparticle.sdk.model.eventprocessing.ProductActionEvent;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.EventName;
+import com.mparticle.sdk.model.eventprocessing.consent.CCPAConsent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+import static com.mparticle.sdk.model.eventprocessing.consent.ConsentState.DEFAULT_CCPA_CONSENT_PURPOSE;
 
 public class ProductActionEventProcessor extends EventProcessor {
 
+    private Logger logger = LogManager.getLogger(ProductActionEventProcessor.class);
+
     public ProductActionEventProcessor(ProductActionEvent event) {
         super(event);
-        this.propertiesContextData = PropertiesData.buildPropertiesContextData(event);
+        this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
+        this.setPageContextData(PageData.buildPageContextData(event));
+        if (checkAppSource()) {
+            this.setAppContextData(AppData.buildAppContextData(event));
+            this.setAdContextData(AdData.buildAdContextData(event));
+        }
+        UserData.updateUserData(event, getUserContextData());
     }
 
     @Override
     public String getTikTokEventName() {
-        assert event instanceof ProductActionEvent;
-        ProductActionEvent.Action action = ((ProductActionEvent)event).getAction();
+        assert getEvent() instanceof ProductActionEvent;
+        ProductActionEvent.Action action = ((ProductActionEvent) getEvent()).getAction();
         switch (action) {
             case CLICK:
                 return EventName.Name.ClickButton.toString();
-//            case REFUND: // TODO: find default mappings
             case CHECKOUT:
                 return EventName.Name.InitiateCheckout.toString();
             case PURCHASE:
@@ -33,51 +41,8 @@ public class ProductActionEventProcessor extends EventProcessor {
                 return EventName.Name.ViewContent.toString();
             case ADD_TO_WISHLIST:
                 return EventName.Name.AddToWishlist.toString();
-//            case CHECKOUT_OPTION: // TODO: find default mappings
-//            case REMOVE_FROM_CART: // TODO: find default mappings
-//            case REMOVE_FROM_WISH_LIST: // TODO: find default mappings
             default:
                 return action.toString();
         }
-    }
-
-    private void processAddToCartEvent() {
-
-    }
-
-    private void processAddToWishListEvent() {
-
-    }
-
-    private void processCheckoutEvent() {
-
-    }
-
-    private void processCheckoutOptionEvent() {
-
-    }
-
-    private void processClickEvent() {
-
-    }
-
-    private void processPurchaseEvent() {
-
-    }
-
-    private void processRefundEvent() {
-
-    }
-
-    private void processRemoveFromCartEvent() {
-
-    }
-
-    private void processRemoveFromWishListEvent() {
-
-    }
-
-    private void processViewDetailEvent() {
-
     }
 }

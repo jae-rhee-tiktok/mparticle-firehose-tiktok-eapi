@@ -6,6 +6,6 @@ import com.mparticle.sdk.model.eventprocessing.SessionEndEvent;
 public class SessionEndEventProcessor extends EventProcessor {
     public SessionEndEventProcessor(SessionEndEvent event) {
         super(event);
-        this.propertiesContextData = PropertiesData.buildPropertiesContextData(event);
+        this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
     }
 }

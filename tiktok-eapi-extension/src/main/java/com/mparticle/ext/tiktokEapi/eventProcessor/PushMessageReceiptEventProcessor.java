@@ -6,6 +6,6 @@ import com.mparticle.sdk.model.eventprocessing.PushMessageReceiptEvent;
 public class PushMessageReceiptEventProcessor extends EventProcessor {
     public PushMessageReceiptEventProcessor(PushMessageReceiptEvent event) {
         super(event);
-        this.propertiesContextData = PropertiesData.buildPropertiesContextData(event);
+        this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
     }
 }

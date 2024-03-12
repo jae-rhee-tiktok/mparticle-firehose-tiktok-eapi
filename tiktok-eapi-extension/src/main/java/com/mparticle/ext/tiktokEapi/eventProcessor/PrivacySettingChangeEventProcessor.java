@@ -6,6 +6,6 @@ import com.mparticle.sdk.model.eventprocessing.PrivacySettingChangeEvent;
 public class PrivacySettingChangeEventProcessor extends EventProcessor {
     public PrivacySettingChangeEventProcessor(PrivacySettingChangeEvent event) {
         super(event);
-        this.propertiesContextData = PropertiesData.buildPropertiesContextData(event);
+        this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
     }
 }

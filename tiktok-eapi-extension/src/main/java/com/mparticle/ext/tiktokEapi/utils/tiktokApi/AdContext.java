@@ -17,10 +17,10 @@ public class AdContext {
     private String creativeId;
 
     @SerializedName("is_retargeting")
-    private String isRetargeting;
+    private boolean isRetargeting;
 
     @SerializedName("attributed")
-    private String attributed;
+    private boolean attributed;
 
     @SerializedName("attribution_type")
     private String attributionType;
@@ -64,19 +64,19 @@ public class AdContext {
         this.creativeId = creativeId;
     }
 
-    public String getIsRetargeting() {
+    public boolean getIsRetargeting() {
         return isRetargeting;
     }
 
-    public void setIsRetargeting(String isRetargeting) {
+    public void setIsRetargeting(boolean isRetargeting) {
         this.isRetargeting = isRetargeting;
     }
 
-    public String getAttributed() {
+    public boolean getAttributed() {
         return attributed;
     }
 
-    public void setAttributed(String attributed) {
+    public void setAttributed(boolean attributed) {
         this.attributed = attributed;
     }
 

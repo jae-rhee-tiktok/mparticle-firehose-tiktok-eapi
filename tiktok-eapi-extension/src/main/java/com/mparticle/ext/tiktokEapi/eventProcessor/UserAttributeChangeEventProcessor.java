@@ -6,6 +6,6 @@ import com.mparticle.sdk.model.eventprocessing.UserAttributeChangeEvent;
 public class UserAttributeChangeEventProcessor extends EventProcessor {
     public UserAttributeChangeEventProcessor(UserAttributeChangeEvent event) {
         super(event);
-        this.propertiesContextData = PropertiesData.buildPropertiesContextData(event);
+        this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
     }
 }

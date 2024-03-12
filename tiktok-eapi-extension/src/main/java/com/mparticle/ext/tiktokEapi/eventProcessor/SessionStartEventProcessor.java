@@ -6,6 +6,6 @@ import com.mparticle.sdk.model.eventprocessing.SessionStartEvent;
 public class SessionStartEventProcessor extends EventProcessor {
     public SessionStartEventProcessor(SessionStartEvent event) {
         super(event);
-        this.propertiesContextData = PropertiesData.buildPropertiesContextData(event);
+        this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
     }
 }

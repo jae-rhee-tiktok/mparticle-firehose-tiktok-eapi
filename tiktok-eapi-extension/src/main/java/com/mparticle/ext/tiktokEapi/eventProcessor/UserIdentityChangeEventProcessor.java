@@ -6,6 +6,6 @@ import com.mparticle.sdk.model.eventprocessing.UserIdentityChangeEvent;
 public class UserIdentityChangeEventProcessor extends EventProcessor {
     public UserIdentityChangeEventProcessor(UserIdentityChangeEvent event) {
         super(event);
-        this.propertiesContextData = PropertiesData.buildPropertiesContextData(event);
+        this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
     }
 }

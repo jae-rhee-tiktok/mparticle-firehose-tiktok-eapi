@@ -1,15 +1,20 @@
 package com.mparticle.ext.tiktokEapi.utils;
 
-import com.mparticle.sdk.model.eventprocessing.Event;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.*;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class TikTokApiClient {
+
+    final static Logger logger = LogManager.getLogger(TikTokApiClient.class);
 
     private static final String url = "https://business-api.tiktok.com/open_api/v1.3/event/track/";
 //    private final String accessToken;
@@ -22,26 +27,28 @@ public class TikTokApiClient {
 //        this.eventSourceId = eventSourceId;
     }
 
-    public void sendRequest(String accessToken, String payload) throws IOException {
-        String result = "";
+    public void sendPostRequest(String accessToken, String payload) throws IOException {
+        logger.debug("sendRequest accessToken: " + accessToken + " payload: " + payload);
+
         HttpPost post = new HttpPost(url);
-        StringEntity reqBodyString = new StringEntity(payload);
-        post.setEntity(reqBodyString);
         post.setHeader("Access-token", accessToken);
         post.setHeader("Content-type", "application/json");
+        StringEntity reqBodyString = new StringEntity(payload);
+        post.setEntity(reqBodyString);
 
         try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
+//            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpClient httpClient = HttpClientBuilder.create()
+                    .setRetryHandler(new DefaultHttpRequestRetryHandler(5, false))
+                    .build();
             CloseableHttpResponse response = httpClient.execute(post);
             // handle result
-            result = EntityUtils.toString(response.getEntity());
+            String result = EntityUtils.toString(response.getEntity());
+            logger.info("sendRequest res: " + result);
         } catch (IOException e) {
-            // TODO: loggging
-        } finally {
-            // TODO: loggging
+            logger.error("sendRequest error msg: ", e);
+            throw new IOException(e);
         }
-
-//        return result;
     }
 
 }

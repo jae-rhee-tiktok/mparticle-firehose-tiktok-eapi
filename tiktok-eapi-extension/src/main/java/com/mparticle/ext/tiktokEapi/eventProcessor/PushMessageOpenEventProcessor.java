@@ -6,6 +6,6 @@ import com.mparticle.sdk.model.eventprocessing.PushMessageOpenEvent;
 public class PushMessageOpenEventProcessor extends EventProcessor {
     public PushMessageOpenEventProcessor(PushMessageOpenEvent event) {
         super(event);
-        this.propertiesContextData = PropertiesData.buildPropertiesContextData(event);
+        this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
     }
 }

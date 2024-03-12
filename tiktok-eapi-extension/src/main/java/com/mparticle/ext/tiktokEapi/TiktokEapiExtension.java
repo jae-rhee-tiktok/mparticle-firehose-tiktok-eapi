@@ -167,7 +167,7 @@ public class TiktokEapiExtension extends MessageProcessor {
     public EventProcessingResponse processEventProcessingRequest(EventProcessingRequest request) throws IOException {
         //do some setup, then call super. if you don't call super, you'll effectively short circuit
         //the whole thing, which isn't really fun for anyone.
-
+        // TODO: add PageView event
         return super.processEventProcessingRequest(request);
     }
 

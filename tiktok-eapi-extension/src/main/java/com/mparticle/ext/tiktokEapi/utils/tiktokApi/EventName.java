@@ -6,6 +6,8 @@ import com.mparticle.sdk.model.eventprocessing.ProductActionEvent;
 
 public class EventName {
     public static enum Name {
+
+        PageView,
         AddPaymentInfo,
         AddToCart,
         AddToWishlist,

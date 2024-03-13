@@ -1,6 +1,7 @@
 package com.mparticle.ext.tiktokEapi.eventProcessor;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mparticle.ext.tiktokEapi.utils.AccountSettings;
 import com.mparticle.ext.tiktokEapi.utils.PageData;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.EventContext;
@@ -84,7 +85,7 @@ public class PageViewEventProcessor extends EventProcessor {
         dataArray.add(eventData);
         eventPayload.setData(dataArray);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String res = gson.toJson(eventPayload);
 
         logger.info("PageView payload: " + res);

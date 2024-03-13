@@ -77,25 +77,25 @@ public class TiktokEapiExtension extends MessageProcessor {
                 new TextSetting(AccountSettings.SETTINGS_ACCESS_TOKEN, "Access Token")
                         .setIsRequired(true)
                         .setIsConfidential(false)
-                        .setDescription("A short description of the purpose and usage of this setting.")
+                        .setDescription("Access Token obtained from TikTok Events Manager.")
         );
         processorSettings.add(
                 new TextSetting(AccountSettings.SETTINGS_EVENT_SOURCE, "Event Source")
                         .setIsRequired(true)
                         .setIsConfidential(false)
-                        .setDescription("A short description of the purpose and usage of this setting.")
+                        .setDescription("This field is used to specify the type of events you are uploading through Events API. Possible values are: \"web\", \"app\", \"offline\", and \"crm\".")
         );
         processorSettings.add(
                 new TextSetting(AccountSettings.SETTINGS_EVENT_SOURCE_ID, "Event Source ID")
                         .setIsRequired(true)
                         .setIsConfidential(false)
-                        .setDescription("A short description of the purpose and usage of this setting.")
+                        .setDescription("An Event Source ID that is used to track events.")
         );
         processorSettings.add(
                 new TextSetting(AccountSettings.SETTINGS_CONTENT_TYPE, "Content Type Mapping")
                         .setIsRequired(true)
                         .setIsConfidential(false)
-                        .setDescription("A short description of the purpose and usage of this setting.")
+                        .setDescription("The type of content in the event. Possible values are: \"product\", and \"product_group\".")
         );
 
         logger.info("processorSettings: ", processorSettings);
@@ -169,8 +169,9 @@ public class TiktokEapiExtension extends MessageProcessor {
 
         logger.info("Sending ModuleRegistrationResponse.");
 
+        String extensionDescription = "TikTok's Events API is a secure server-to-server integration that allows advertisers to share the actions customers take on their websites, apps, offline or CRM systems directly with TikTok.";
         return new ModuleRegistrationResponse(NAME, "1.0")
-                .setDescription("A brief description of your company.")
+                .setDescription(extensionDescription)
 //                .setAudienceProcessingRegistration(audienceRegistration)
                 .setEventProcessingRegistration(eventProcessingRegistration)
 //                .setDsrProcessingRegistration(dsrRegistration)
@@ -189,10 +190,10 @@ public class TiktokEapiExtension extends MessageProcessor {
         //the whole thing, which isn't really fun for anyone.
 
         logger.info("processEventProcessingRequest sending PageView event.");
-
-        // TODO: add PageView event
-//        PageViewEventProcessor pageViewEventProcessor = new PageViewEventProcessor(request);
-//        pageViewEventProcessor.execute();
+        Collections.sort(
+                request.getEvents(),
+                (a, b) -> a.getTimestamp() > b.getTimestamp() ? 1 : a.getTimestamp() == b.getTimestamp() ? 0 : -1
+        );
 
         return super.processEventProcessingRequest(request);
     }

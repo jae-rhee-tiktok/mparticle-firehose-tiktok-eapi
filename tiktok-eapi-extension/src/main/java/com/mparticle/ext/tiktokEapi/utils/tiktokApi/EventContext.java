@@ -13,7 +13,7 @@ public class EventContext {
     private String eventSourceId;
 
     @SerializedName("partner_name")
-    private static final String partnerName = "MParticle";
+    private final String partnerName = "MParticle";
 
     @SerializedName("data")
     private List<EventDataContext> data;
@@ -22,7 +22,7 @@ public class EventContext {
 
     }
 
-    public static String getPartnerName() {
+    public String getPartnerName() {
         return partnerName;
     }
 

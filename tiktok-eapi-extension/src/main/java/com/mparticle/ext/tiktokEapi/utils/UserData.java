@@ -2,7 +2,6 @@ package com.mparticle.ext.tiktokEapi.utils;
 
 import com.mparticle.sdk.model.eventprocessing.*;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.UserContext;
-import com.sun.org.apache.xalan.internal.xsltc.trax.SmartTransformerFactoryImpl;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.logging.log4j.LogManager;
@@ -99,7 +98,7 @@ public class UserData {
         String ttclid = "";
         List<NameValuePair> params = URLEncodedUtils.parse(url, StandardCharsets.UTF_8);
         for (NameValuePair param : params) {
-            if (param.getName().equalsIgnoreCase("ttclid")) {
+            if (param.getName().endsWith("ttclid")) {
                 ttclid = param.getValue();
             }
         }

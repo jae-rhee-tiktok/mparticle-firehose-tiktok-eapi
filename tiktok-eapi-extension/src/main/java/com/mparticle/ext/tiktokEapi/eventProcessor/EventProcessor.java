@@ -1,6 +1,7 @@
 package com.mparticle.ext.tiktokEapi.eventProcessor;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mparticle.ext.tiktokEapi.utils.AccountSettings;
 import com.mparticle.ext.tiktokEapi.utils.TikTokApiClient;
 import com.mparticle.ext.tiktokEapi.utils.UserData;
@@ -70,13 +71,12 @@ public class EventProcessor {
 
     public boolean getLdu() {
         try {
-            assert getEvent() instanceof ProductActionEvent;
             CCPAConsent ccpaDataConsent = getEvent().getRequest().getConsentState().getCCPA().get(DEFAULT_CCPA_CONSENT_PURPOSE);
 //            GDPRConsent gdprLocationConsent = getEvent().getRequest().getConsentState().getGDPR().get("location_collection");
 //            GDPRConsent gdprParentalConsent = getEvent().getRequest().getConsentState().getGDPR().get("parental");
             return ccpaDataConsent.isConsented();
-        } catch (Exception e) {
-            logger.error("CCPA Consent error. Returning \"false\" for LDU: ", e);
+        } catch (NullPointerException e) {
+            logger.warn("CCPA Consent error. Returning \"false\" for LDU: ", e);
             return false;
         }
     }
@@ -119,7 +119,7 @@ public class EventProcessor {
         dataArray.add(eventData);
         eventPayload.setData(dataArray);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         return gson.toJson(eventPayload);
     }
 

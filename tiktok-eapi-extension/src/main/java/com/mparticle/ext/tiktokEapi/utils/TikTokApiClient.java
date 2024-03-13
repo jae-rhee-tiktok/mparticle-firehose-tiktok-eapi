@@ -1,5 +1,9 @@
 package com.mparticle.ext.tiktokEapi.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mparticle.ext.tiktokEapi.utils.tiktokApi.ApiResponseBody;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -40,9 +44,18 @@ public class TikTokApiClient {
             // handle result
             String result = EntityUtils.toString(response.getEntity());
             logger.info("sendRequest res: " + result);
+            handleTikTokApi200Response(result);
         } catch (IOException e) {
             logger.error("sendRequest error msg: ", e);
             throw new IOException(e);
+        }
+    }
+
+    private void handleTikTokApi200Response(String response) throws IOException {
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        ApiResponseBody responseBody = gson.fromJson(response, ApiResponseBody.class);
+        if (responseBody.getCode() != 0) {
+            throw new IOException("TikTok API HTTP response code error: " + responseBody.getCode());
         }
     }
 

@@ -1,6 +1,7 @@
 package com.mparticle.ext.tiktokEapi.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mparticle.sdk.model.eventprocessing.*;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.Content;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.PropertiesContext;
@@ -200,7 +201,7 @@ public class PropertiesData {
         List<Content> contentsArr = new ArrayList<>();
 
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             Product[] productsArr = gson.fromJson(inputArrString, Product[].class);
 
             for (Product product : productsArr) {
@@ -224,14 +225,14 @@ public class PropertiesData {
     private static List<com.mparticle.ext.tiktokEapi.utils.tiktokApi.Promotion> buildPromotions(List<Promotion> mParticlePromotions) {
         List<com.mparticle.ext.tiktokEapi.utils.tiktokApi.Promotion> tiktokPromos = new ArrayList<>();
         for (Promotion promo : mParticlePromotions) {
-            com.mparticle.ext.tiktokEapi.utils.tiktokApi.Promotion tiktikPromo = new com.mparticle.ext.tiktokEapi.utils.tiktokApi.Promotion();
+            com.mparticle.ext.tiktokEapi.utils.tiktokApi.Promotion tiktokPromo = new com.mparticle.ext.tiktokEapi.utils.tiktokApi.Promotion();
 
-            tiktikPromo.setId(promo.getId());
-            tiktikPromo.setName(promo.getName());
-            tiktikPromo.setCreative(promo.getCreative());
-            tiktikPromo.setPosition(promo.getPosition());
+            tiktokPromo.setId(promo.getId());
+            tiktokPromo.setName(promo.getName());
+            tiktokPromo.setCreative(promo.getCreative());
+            tiktokPromo.setPosition(promo.getPosition());
 
-            tiktokPromos.add(tiktikPromo);
+            tiktokPromos.add(tiktokPromo);
         }
         return tiktokPromos;
     }

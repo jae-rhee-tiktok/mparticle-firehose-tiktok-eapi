@@ -44,10 +44,10 @@ public class TikTokApiClient {
 
             // handle result
             String result = EntityUtils.toString(response.getEntity());
-            logger.info("sendRequest res: " + result);
+            logger.info("sendPostRequest res: " + result);
             handleTikTokApi200Response(result, accessToken, payload);
         } catch (IOException e) {
-            logger.error("sendRequest error msg: ", e);
+            logger.error("sendPostRequest error msg: ", e);
             throw new IOException(e);
         }
     }
@@ -58,7 +58,7 @@ public class TikTokApiClient {
         if (responseBody.getCode() != 0) {
             if (responseBody.getCode() == 40100) {
                 try {
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(5); // wait for QPS to reset
                 } catch (InterruptedException e) {
                     logger.error("TikTokApiClient retry interrupted!");
                     logger.debug(String.format("accessToken: %s reqBody: %s", accessToken, reqBody));

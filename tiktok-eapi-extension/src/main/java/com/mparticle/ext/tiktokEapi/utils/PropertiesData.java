@@ -85,10 +85,10 @@ public class PropertiesData {
         propertiesData.setPromotions(promotions);
 
         Map<String, String> eventAttributes = event.getAttributes();
-        propertiesData.setDescription(getAttributeOrEmptyString("currency", eventAttributes));
-        propertiesData.setQuery(getAttributeOrEmptyString("value", eventAttributes));
-        propertiesData.setDescription(getAttributeOrEmptyString("orderId", eventAttributes));
-        propertiesData.setQuery(getAttributeOrEmptyString("shopId", eventAttributes));
+        propertiesData.setCurrency(getAttributeOrEmptyString("currency", eventAttributes));
+        propertiesData.setValue(Float.parseFloat(getAttributeOrEmptyString("value", eventAttributes)));
+        propertiesData.setOrderId(getAttributeOrEmptyString("orderId", eventAttributes));
+        propertiesData.setShopId(getAttributeOrEmptyString("shopId", eventAttributes));
         propertiesData.setDescription(getAttributeOrEmptyString("description", eventAttributes));
         propertiesData.setQuery(getAttributeOrEmptyString("query", eventAttributes));
 
@@ -113,7 +113,7 @@ public class PropertiesData {
 
     public static PropertiesContext buildPropertiesContextData(ScreenViewEvent event) {
         PropertiesContext propertiesData = new PropertiesContext();
-
+        propertiesData.setDescription(event.getScreenName());
         return propertiesData;
     }
 
@@ -187,10 +187,10 @@ public class PropertiesData {
         propertiesData.setContents(contentsArr);
 
         Map<String, String> eventAttributes = event.getAttributes();
-        propertiesData.setDescription(getAttributeOrEmptyString("currency", eventAttributes));
-        propertiesData.setQuery(getAttributeOrEmptyString("value", eventAttributes));
-        propertiesData.setDescription(getAttributeOrEmptyString("orderId", eventAttributes));
-        propertiesData.setQuery(getAttributeOrEmptyString("shopId", eventAttributes));
+        propertiesData.setCurrency(getAttributeOrEmptyString("currency", eventAttributes));
+        propertiesData.setValue(Float.parseFloat(getAttributeOrEmptyString("value", eventAttributes)));
+        propertiesData.setOrderId(getAttributeOrEmptyString("orderId", eventAttributes));
+        propertiesData.setShopId(getAttributeOrEmptyString("shopId", eventAttributes));
         propertiesData.setDescription(getAttributeOrEmptyString("description", eventAttributes));
         propertiesData.setQuery(getAttributeOrEmptyString("query", eventAttributes));
 

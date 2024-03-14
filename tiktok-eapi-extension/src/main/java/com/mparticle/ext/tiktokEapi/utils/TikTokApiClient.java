@@ -27,7 +27,7 @@ public class TikTokApiClient {
 
     }
 
-    public void sendPostRequest(String accessToken, String payload) throws IOException {
+    public void sendPostRequest(String accessToken, String payload, int retries) throws IOException {
         logger.debug("sendRequest accessToken: " + accessToken + " payload: " + payload);
 
         HttpPost post = new HttpPost(url);
@@ -45,18 +45,21 @@ public class TikTokApiClient {
             // handle result
             String result = EntityUtils.toString(response.getEntity());
             logger.info("sendPostRequest res: " + result);
-            handleTikTokApi200Response(result, accessToken, payload);
+            handleTikTokApi200Response(result, accessToken, payload, retries);
         } catch (IOException e) {
             logger.error("sendPostRequest error msg: ", e);
             throw new IOException(e);
         }
     }
 
-    private void handleTikTokApi200Response(String response, String accessToken, String reqBody) throws IOException {
+    private void handleTikTokApi200Response(String response, String accessToken, String reqBody, int retries) throws IOException {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         ApiResponseBody responseBody = gson.fromJson(response, ApiResponseBody.class);
         if (responseBody.getCode() != 0) {
             if (responseBody.getCode() == 40100) {
+                if (retries == 6) {
+                    throw new IOException("Max retry reached. Previous response msg:" + responseBody.getCode() + ' ' + responseBody.getMessage());
+                }
                 try {
                     TimeUnit.SECONDS.sleep(5); // wait for QPS to reset
                 } catch (InterruptedException e) {
@@ -64,7 +67,7 @@ public class TikTokApiClient {
                     logger.debug(String.format("accessToken: %s reqBody: %s", accessToken, reqBody));
                     throw new RuntimeException(e);
                 }
-                sendPostRequest(accessToken, reqBody);
+                sendPostRequest(accessToken, reqBody, retries + 1);
                 return;
             }
             throw new IOException("TikTok API HTTP response code error: " + responseBody.getCode() + ' ' + responseBody.getMessage());

@@ -40,7 +40,8 @@ public class EventProcessor {
             TikTokApiClient tikTokApiClient = new TikTokApiClient();
             tikTokApiClient.sendPostRequest(
                     getEvent().getRequest().getAccount().getStringSetting(AccountSettings.SETTINGS_ACCESS_TOKEN, true, null),
-                    buildEventPayload()
+                    buildEventPayload(),
+                    0
             );
         } catch (IOException e) {
             logger.error("execute error msg: ", e);

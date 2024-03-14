@@ -9,10 +9,8 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.ConsoleHandler;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,11 +26,84 @@ public class TikTokEapiExtensionTest  {
 
     MessageSerializer serializer = new MessageSerializer();
 
+    private final String userAgentName = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+
+    private EventProcessingRequest createGenericEnvRequest() {
+        EventProcessingRequest request = new EventProcessingRequest();
+
+        request.setUserAttributes(createUserAttributes());
+        request.setUserIdentities(createUserIdentities());
+        request.setMpId("test_mp_id");
+        request.setAccount(createOfflineAccount());
+
+        GenericRuntimeEnvironment genericRuntimeEnvironment = new GenericRuntimeEnvironment();
+        genericRuntimeEnvironment.setLocaleCountry("US");
+        genericRuntimeEnvironment.setLocaleLanguage("en");
+
+        request.setRuntimeEnvironment(genericRuntimeEnvironment);
+
+        return request;
+    }
+
+    private EventProcessingRequest createUnknownEnvRequest() {
+        EventProcessingRequest request = new EventProcessingRequest();
+
+        request.setUserAttributes(createUserAttributes());
+        request.setUserIdentities(createUserIdentities());
+        request.setMpId("test_mp_id");
+        request.setAccount(createWebAccount());
+
+        UnknownRuntimeEnvironment unknownRuntimeEnvironment = new UnknownRuntimeEnvironment();
+        unknownRuntimeEnvironment.setClientIpAddress("0.0.0.0");
+        unknownRuntimeEnvironment.setUserAgent(userAgentName);
+
+        request.setRuntimeEnvironment(unknownRuntimeEnvironment);
+
+        return request;
+    }
+
     private EventProcessingRequest createWebRequest() {
         EventProcessingRequest request = new EventProcessingRequest();
 
-        request.setUserAttributes(createWebUserAttributes());
+        request.setUserAttributes(createUserAttributes());
+        request.setUserIdentities(createUserIdentities());
+        request.setMpId("test_mp_id");
+        request.setAccount(createWebAccount());
 
+        WebRuntimeEnvironment webRuntimeEnvironment = new WebRuntimeEnvironment();
+        webRuntimeEnvironment.setClientIpAddress("0.0.0.0");
+        webRuntimeEnvironment.setUserAgent(userAgentName);
+        webRuntimeEnvironment.setLocaleCountry("US");
+        webRuntimeEnvironment.setLocaleLanguage("en");
+
+        request.setRuntimeEnvironment(webRuntimeEnvironment);
+
+        return request;
+    }
+
+    private Account createWebAccount() {
+        Account account = new Account();
+        HashMap<String, String> accSettings = new HashMap<>();
+        accSettings.put(AccountSettings.SETTINGS_ACCESS_TOKEN, "b674415eb3a55f1444edfadaebbeaddd98c65070");
+        accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE, "web");
+        accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE_ID, "CNP1VUBC77U6D6GPFSC0");
+        accSettings.put(AccountSettings.SETTINGS_CONTENT_TYPE, "product");
+        account.setAccountSettings(accSettings);
+        return account;
+    }
+
+    private Account createOfflineAccount() {
+        Account account = new Account();
+        HashMap<String, String> accSettings = new HashMap<>();
+        accSettings.put(AccountSettings.SETTINGS_ACCESS_TOKEN, "0622960e65db5d201266004faa9038212e06cb2d");
+        accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE, "offline");
+        accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE_ID, "7346003541326053377");
+        accSettings.put(AccountSettings.SETTINGS_CONTENT_TYPE, "product");
+        account.setAccountSettings(accSettings);
+        return account;
+    }
+
+    private List<UserIdentity> createUserIdentities() {
         List<UserIdentity> userIdentities = new ArrayList<>();
         userIdentities.add(new UserIdentity(UserIdentity.Type.EMAIL, Identity.Encoding.SHA256, "test1@test.com"));
         userIdentities.add(new UserIdentity(UserIdentity.Type.OTHER2, Identity.Encoding.SHA256, "test2@test.com"));
@@ -43,33 +114,10 @@ public class TikTokEapiExtensionTest  {
         userIdentities.add(new UserIdentity(UserIdentity.Type.PHONE_NUMBER_2, Identity.Encoding.SHA256, "+12345678901"));
         userIdentities.add(new UserIdentity(UserIdentity.Type.PHONE_NUMBER_3, Identity.Encoding.SHA256, "+12345678902"));
         userIdentities.add(new UserIdentity(UserIdentity.Type.CUSTOMER, Identity.Encoding.SHA256, "test_external_id"));
-
-        request.setUserIdentities(userIdentities);
-
-        request.setMpId("test_mp_id");
-
-        Account account = new Account();
-        HashMap<String, String> accSettings = new HashMap<>();
-        accSettings.put(AccountSettings.SETTINGS_ACCESS_TOKEN, "b674415eb3a55f1444edfadaebbeaddd98c65070");
-        accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE, "web");
-        accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE_ID, "CNP1VUBC77U6D6GPFSC0");
-        accSettings.put(AccountSettings.SETTINGS_CONTENT_TYPE, "product");
-        account.setAccountSettings(accSettings);
-
-        request.setAccount(account);
-
-        WebRuntimeEnvironment webRuntimeEnvironment = new WebRuntimeEnvironment();
-        webRuntimeEnvironment.setClientIpAddress("0.0.0.0");
-        webRuntimeEnvironment.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
-        webRuntimeEnvironment.setLocaleCountry("US");
-        webRuntimeEnvironment.setLocaleLanguage("en");
-
-        request.setRuntimeEnvironment(webRuntimeEnvironment);
-
-        return request;
+        return userIdentities;
     }
 
-    private HashMap<String, String> createWebUserAttributes() {
+    private HashMap<String, String> createUserAttributes() {
         HashMap<String, String> userAttributes = new HashMap<>();
         userAttributes.put("$firstname", "test_first_name");
         userAttributes.put("$lastname", "test_last_name");
@@ -78,6 +126,13 @@ public class TikTokEapiExtensionTest  {
         userAttributes.put("$state", "test_state");
         userAttributes.put("$zip", "test_zip");
         return userAttributes;
+    }
+
+    private HashMap<String, String> createOfflineEventAttributes() {
+        HashMap<String, String> eventAttributes = new HashMap<>();
+        eventAttributes.put("description", "test_description");
+        eventAttributes.put("query", "test_query");
+        return eventAttributes;
     }
 
     private HashMap<String, String> createWebEventAttributes() {
@@ -250,6 +305,21 @@ public class TikTokEapiExtensionTest  {
     }
 
     @Test
+    public void testProcessImpressionViewEvent() throws Exception {
+        TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
+        ImpressionEvent event = new ImpressionEvent();
+        event.setRequest(createWebRequest());
+
+        Impression impression = new Impression();
+        impression.setProducts(createProductList());
+        event.setImpressions(Arrays.asList(impression));
+        event.setAttributes(createWebEventAttributes());
+        event.setAttributes(createWebEventAttributes());
+
+        tiktokEapiExtension.processImpressionEvent(event);
+    }
+
+    @Test
     public void testProcessPushMessageReceiptEvent() throws Exception {
 
     }
@@ -265,7 +335,7 @@ public class TikTokEapiExtensionTest  {
     }
 
     @Test
-    public void testProcessProductActionEvent() throws Exception {
+    public void testProcessProductActionWebEvent() throws Exception {
         TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
 
         ProductActionEvent event = new ProductActionEvent();
@@ -277,19 +347,118 @@ public class TikTokEapiExtensionTest  {
         event.setCurrencyCode("USD");
         event.setTotalAmount(new BigDecimal(500));
 
-//        event.setAction(ProductActionEvent.Action.PURCHASE);
-//
-//        tiktokEapiExtension.processProductActionEvent(event);
-
         for(ProductActionEvent.Action action : ProductActionEvent.Action.values()) {
             event.setAction(action);
             tiktokEapiExtension.processProductActionEvent(event);
+            TimeUnit.SECONDS.sleep(1);
         }
 
     }
 
     @Test
-    public void testProcessCustomEvent() throws Exception {
+    public void testProcessProductActionWebEventNonWebEnv() throws Exception {
+        TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
+
+        ProductActionEvent event = new ProductActionEvent();
+        event.setRequest(createUnknownEnvRequest());
+
+        event.setAttributes(createWebEventAttributes());
+
+        event.setProducts(createProductList());
+        event.setCurrencyCode("USD");
+        event.setTotalAmount(new BigDecimal(500));
+
+        for(ProductActionEvent.Action action : ProductActionEvent.Action.values()) {
+            event.setAction(action);
+            tiktokEapiExtension.processProductActionEvent(event);
+            TimeUnit.SECONDS.sleep(1);
+        }
+
+    }
+
+    @Test
+    public void testProcessProductActionOfflineEvent() throws Exception {
+        TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
+
+        ProductActionEvent event = new ProductActionEvent();
+        event.setRequest(createGenericEnvRequest());
+
+        event.setAttributes(createOfflineEventAttributes());
+
+        event.setProducts(createProductList());
+        event.setCurrencyCode("USD");
+        event.setTotalAmount(new BigDecimal(500));
+
+        for(ProductActionEvent.Action action : ProductActionEvent.Action.values()) {
+            event.setAction(action);
+            tiktokEapiExtension.processProductActionEvent(event);
+            TimeUnit.SECONDS.sleep(1);
+        }
+
+    }
+
+    @Test
+    public void testProcessPromotionActionEvent() throws Exception {
+        TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
+
+        PromotionActionEvent event = new PromotionActionEvent();
+        event.setRequest(createWebRequest());
+
+        Promotion promotion1 = new Promotion();
+        promotion1.setId("test_promo_id");
+        promotion1.setName("test_promo_name");
+        promotion1.setCreative("test_promo_creative");
+        promotion1.setPosition("test_promo_position");
+        Promotion promotion2 = new Promotion();
+        promotion2.setId("test_promo_id");
+        promotion2.setName("test_promo_name");
+        promotion2.setCreative("test_promo_creative");
+        promotion2.setPosition("test_promo_position");
+
+        event.setPromotions(Arrays.asList(promotion1,promotion2));
+        event.setAttributes(createWebEventAttributes());
+
+        for(PromotionActionEvent.Action action : PromotionActionEvent.Action.values()) {
+            event.setAction(action);
+            tiktokEapiExtension.processPromotionActionEvent(event);
+            TimeUnit.SECONDS.sleep(1);
+        }
+
+    }
+
+    @Test
+    public void testProcessCustomWebEvent() throws Exception {
+        TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
+
+        CustomEvent event = new CustomEvent();
+        event.setRequest(createWebRequest());
+
+        event.setAttributes(createWebEventAttributes());
+
+        for(CustomEvent.CustomType type : CustomEvent.CustomType.values()) {
+            event.setCustomType(type);
+            event.setName(type.toString());
+            tiktokEapiExtension.processCustomEvent(event);
+            TimeUnit.SECONDS.sleep(1);
+        }
+
+    }
+
+    @Test
+    public void testProcessCustomWebEventNonWebEnv() throws Exception {
+        TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
+
+        CustomEvent event = new CustomEvent();
+        event.setRequest(createUnknownEnvRequest());
+
+        event.setAttributes(createWebEventAttributes());
+
+        for(CustomEvent.CustomType type : CustomEvent.CustomType.values()) {
+            event.setCustomType(type);
+            event.setName(type.toString());
+            tiktokEapiExtension.processCustomEvent(event);
+            TimeUnit.SECONDS.sleep(1);
+        }
 
     }
 

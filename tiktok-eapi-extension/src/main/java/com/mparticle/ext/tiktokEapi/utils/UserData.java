@@ -2,6 +2,7 @@ package com.mparticle.ext.tiktokEapi.utils;
 
 import com.mparticle.sdk.model.eventprocessing.*;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.UserContext;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +29,7 @@ public class UserData {
         List<String> emailArray = new ArrayList<>();
         List<String> phoneArray = new ArrayList<>();
         List<String> extIdArray = new ArrayList<>();
-        extIdArray.add(event.getRequest().getMpId()); // add mP user ID
+        extIdArray.add(checkAndReturnHash(event.getRequest().getMpId())); // add mP user ID
 
         try {
             for (UserIdentity userIdentity : userIdentities) {
@@ -38,15 +39,15 @@ public class UserData {
                     case OTHER3: // EMAIL_ALIAS_2
                     case OTHER4: // EMAIL_ALIAS_3
                     case OTHER5: // EMAIL_ALIAS_4
-                        emailArray.add(userIdentity.getValue());
+                        emailArray.add(checkAndReturnHash(userIdentity.getValue()));
                         break;
                     case MOBILE_NUMBER:
                     case PHONE_NUMBER_2:
                     case PHONE_NUMBER_3:
-                        phoneArray.add(userIdentity.getValue());
+                        phoneArray.add(checkAndReturnHash(userIdentity.getValue()));
                         break;
                     case CUSTOMER:
-                        extIdArray.add(userIdentity.getValue());
+                        extIdArray.add(checkAndReturnHash(userIdentity.getValue()));
                         break;
                 }
             }
@@ -61,13 +62,13 @@ public class UserData {
                     DeviceIdentity.Type type = deviceIdentity.getType();
                     switch (type) {
                         case IOS_ADVERTISING_ID:
-                            userData.setIdfa(deviceIdentity.getValue());
+                            userData.setIdfa(deviceIdentity.getValue().toUpperCase());
                             break;
                         case IOS_VENDOR_ID:
                             userData.setIdfv(deviceIdentity.getValue());
                             break;
                         case GOOGLE_ADVERTISING_ID:
-                            userData.setGaid(deviceIdentity.getValue());
+                            userData.setGaid(deviceIdentity.getValue().toLowerCase());
                             break;
                     }
                 }
@@ -202,5 +203,20 @@ public class UserData {
                 return "";
         }
         return languageLocale + "-" + countryLocale;
+    }
+
+    private static String checkAndReturnHash(String input) {
+        String lcInput = input.toLowerCase();
+        if (lcInput.length() != 64) {
+            return DigestUtils.sha256Hex(lcInput);
+        } else {
+            if (lcInput.contains("@")) {
+                return DigestUtils.sha256Hex(lcInput);
+            }
+            if (lcInput.contains("+")) {
+                return DigestUtils.sha256Hex(lcInput);
+            }
+        }
+        return lcInput;
     }
 }

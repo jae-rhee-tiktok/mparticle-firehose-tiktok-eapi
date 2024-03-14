@@ -215,8 +215,10 @@ public class PropertiesData {
 
                 contentsArr.add(content);
             }
+        } catch (NullPointerException e) {
+            logger.warn("Product list missing. Returning empty array.");
         } catch (Exception e) {
-            logger.error("Gson error. Returning empty array: ", e);
+            logger.error("Product list parse error. Returning empty array.");
         }
 
         return contentsArr;
@@ -231,7 +233,6 @@ public class PropertiesData {
             tiktokPromo.setName(promo.getName());
             tiktokPromo.setCreative(promo.getCreative());
             tiktokPromo.setPosition(promo.getPosition());
-
             tiktokPromos.add(tiktokPromo);
         }
         return tiktokPromos;

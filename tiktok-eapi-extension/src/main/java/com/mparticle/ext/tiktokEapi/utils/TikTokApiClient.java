@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class TikTokApiClient {
 
@@ -44,18 +45,29 @@ public class TikTokApiClient {
             // handle result
             String result = EntityUtils.toString(response.getEntity());
             logger.info("sendRequest res: " + result);
-            handleTikTokApi200Response(result);
+            handleTikTokApi200Response(result, accessToken, payload);
         } catch (IOException e) {
             logger.error("sendRequest error msg: ", e);
             throw new IOException(e);
         }
     }
 
-    private void handleTikTokApi200Response(String response) throws IOException {
+    private void handleTikTokApi200Response(String response, String accessToken, String reqBody) throws IOException {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         ApiResponseBody responseBody = gson.fromJson(response, ApiResponseBody.class);
         if (responseBody.getCode() != 0) {
-            throw new IOException("TikTok API HTTP response code error: " + responseBody.getCode());
+            if (responseBody.getCode() == 40100) {
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (InterruptedException e) {
+                    logger.error("TikTokApiClient retry interrupted!");
+                    logger.debug(String.format("accessToken: %s reqBody: %s", accessToken, reqBody));
+                    throw new RuntimeException(e);
+                }
+                sendPostRequest(accessToken, reqBody);
+                return;
+            }
+            throw new IOException("TikTok API HTTP response code error: " + responseBody.getCode() + ' ' + responseBody.getMessage());
         }
     }
 

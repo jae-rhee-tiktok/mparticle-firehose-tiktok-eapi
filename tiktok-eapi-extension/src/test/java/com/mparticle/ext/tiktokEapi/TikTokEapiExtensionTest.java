@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.ConsoleHandler;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class TikTokEapiExtensionTest  {
 
-    private Logger logger = LogManager.getLogger(TikTokEapiExtensionTest.class);
+    private final Logger logger = LogManager.getLogger(TikTokEapiExtensionTest.class);
 
     MessageSerializer serializer = new MessageSerializer();
 
@@ -141,6 +140,7 @@ public class TikTokEapiExtensionTest  {
         eventAttributes.put("referrer", "https://www.tiktok.com/redirect");
         eventAttributes.put("description", "test_description");
         eventAttributes.put("query", "test_query");
+        eventAttributes.put("ttp", "test_ttp_id");
         return eventAttributes;
     }
 

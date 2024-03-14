@@ -320,18 +320,16 @@ public class TikTokEapiExtensionTest  {
     }
 
     @Test
-    public void testProcessPushMessageReceiptEvent() throws Exception {
-
-    }
-
-    @Test
     public void testProcessPushSubscriptionEvent() throws Exception {
+        TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
+        PushSubscriptionEvent event = new PushSubscriptionEvent();
+        event.setRequest(createWebRequest());
 
-    }
-
-    @Test
-    public void testProcessUserIdentityChangeEvent() throws Exception {
-
+        for(PushSubscriptionEvent.Action action : PushSubscriptionEvent.Action.values()) {
+            event.setAction(action);
+            tiktokEapiExtension.processPushSubscriptionEvent(event);
+            TimeUnit.SECONDS.sleep(1);
+        }
     }
 
     @Test
@@ -340,9 +338,7 @@ public class TikTokEapiExtensionTest  {
 
         ProductActionEvent event = new ProductActionEvent();
         event.setRequest(createWebRequest());
-
         event.setAttributes(createWebEventAttributes());
-
         event.setProducts(createProductList());
         event.setCurrencyCode("USD");
         event.setTotalAmount(new BigDecimal(500));
@@ -361,9 +357,7 @@ public class TikTokEapiExtensionTest  {
 
         ProductActionEvent event = new ProductActionEvent();
         event.setRequest(createUnknownEnvRequest());
-
         event.setAttributes(createWebEventAttributes());
-
         event.setProducts(createProductList());
         event.setCurrencyCode("USD");
         event.setTotalAmount(new BigDecimal(500));
@@ -382,9 +376,7 @@ public class TikTokEapiExtensionTest  {
 
         ProductActionEvent event = new ProductActionEvent();
         event.setRequest(createGenericEnvRequest());
-
         event.setAttributes(createOfflineEventAttributes());
-
         event.setProducts(createProductList());
         event.setCurrencyCode("USD");
         event.setTotalAmount(new BigDecimal(500));
@@ -403,12 +395,14 @@ public class TikTokEapiExtensionTest  {
 
         PromotionActionEvent event = new PromotionActionEvent();
         event.setRequest(createWebRequest());
+        event.setAttributes(createWebEventAttributes());
 
         Promotion promotion1 = new Promotion();
         promotion1.setId("test_promo_id");
         promotion1.setName("test_promo_name");
         promotion1.setCreative("test_promo_creative");
         promotion1.setPosition("test_promo_position");
+
         Promotion promotion2 = new Promotion();
         promotion2.setId("test_promo_id");
         promotion2.setName("test_promo_name");
@@ -416,7 +410,6 @@ public class TikTokEapiExtensionTest  {
         promotion2.setPosition("test_promo_position");
 
         event.setPromotions(Arrays.asList(promotion1,promotion2));
-        event.setAttributes(createWebEventAttributes());
 
         for(PromotionActionEvent.Action action : PromotionActionEvent.Action.values()) {
             event.setAction(action);
@@ -459,16 +452,6 @@ public class TikTokEapiExtensionTest  {
             tiktokEapiExtension.processCustomEvent(event);
             TimeUnit.SECONDS.sleep(1);
         }
-
-    }
-
-    @Test
-    public void testProcessAudienceMembershipChangeRequest() throws Exception {
-
-    }
-
-    @Test
-    public void testProcessAudienceSubscriptionRequest() throws Exception {
 
     }
 }

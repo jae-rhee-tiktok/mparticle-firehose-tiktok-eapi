@@ -188,7 +188,8 @@ public class PropertiesData {
 
         Map<String, String> eventAttributes = event.getAttributes();
         propertiesData.setCurrency(getAttributeOrEmptyString("currency", eventAttributes));
-        propertiesData.setValue(Float.parseFloat(getAttributeOrEmptyString("value", eventAttributes)));
+        String valueVal = getAttributeOrEmptyString("value", eventAttributes);
+        propertiesData.setValue(Float.parseFloat(valueVal.isEmpty() ? "0" : valueVal));
         propertiesData.setOrderId(getAttributeOrEmptyString("orderId", eventAttributes));
         propertiesData.setShopId(getAttributeOrEmptyString("shopId", eventAttributes));
         propertiesData.setDescription(getAttributeOrEmptyString("description", eventAttributes));

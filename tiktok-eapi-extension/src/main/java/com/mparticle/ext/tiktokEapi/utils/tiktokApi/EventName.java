@@ -1,11 +1,7 @@
 package com.mparticle.ext.tiktokEapi.utils.tiktokApi;
 
-import com.mparticle.sdk.model.eventprocessing.CustomEvent;
-import com.mparticle.sdk.model.eventprocessing.Event;
-import com.mparticle.sdk.model.eventprocessing.ProductActionEvent;
-
 public class EventName {
-    public static enum Name {
+    public enum Name {
 
         PageView,
         AddPaymentInfo,
@@ -23,13 +19,49 @@ public class EventName {
         Subscribe,
         ViewContent;
 
-        private Name() {
+        Name() {
         }
 
         public String toString() {
             return this.name();
         }
+    }
 
+    public enum AppName {
 
+        AchieveLevel,
+        AddPaymentInfo,
+        AddToCart,
+        AddToWishlist,
+        Checkout,
+        CompleteTutorial,
+        CreateGroup,
+        CreateRole,
+        GenerateLead,
+        InAppADClick,
+        InAppAdImpr,
+        InstallApp,
+        JoinGroup,
+        LaunchAPP,
+        LoanApplication,
+        LoanApproval,
+        LoanDisbursal,
+        Login,
+        Purchase,
+        Rate,
+        Registration,
+        Search,
+        SpendCredits,
+        StartTrial,
+        Subscribe,
+        UnlockAchievement,
+        ViewContent;
+
+        AppName() {
+        }
+
+        public String toString() {
+            return this.name();
+        }
     }
 }

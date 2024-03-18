@@ -47,6 +47,11 @@ public class UserData {
                         phoneArray.add(checkAndReturnHash(userIdentity.getValue()));
                         break;
                     case CUSTOMER:
+                    case GOOGLE:
+                    case TWITTER:
+                    case FACEBOOK:
+                    case MICROSOFT:
+                    case YAHOO:
                         extIdArray.add(checkAndReturnHash(userIdentity.getValue()));
                         break;
                 }
@@ -79,7 +84,7 @@ public class UserData {
                 RuntimeEnvironment runtimeEnv = event.getRequest().getRuntimeEnvironment();
                 userData.setIp(runtimeEnv.getClientIpAddress());
                 userData.setUserAgent(runtimeEnv.getUserAgent());
-                userData.setLocale(getLocale(runtimeEnvironment));
+                setDeviceAttributes(runtimeEnv, userData);
             }
 
         } catch (Exception e) {
@@ -94,9 +99,10 @@ public class UserData {
         return userData;
     }
 
-    private static void setUserContextData(Map<String, String> eventAttributes, Map<String, String> userAttributes, UserContext userContext) {
-        String url = getAttributeOrEmptyString("url", eventAttributes);
-        String ttclid = "";
+    private static void updateUserContextData(Map<String, String> eventAttributes, Map<String, String> userAttributes, UserContext userContext) {
+        String userAttributeUrl = getAttributeOrEmptyString("url", userAttributes);
+        String url = userAttributeUrl != null ? userAttributeUrl : getAttributeOrEmptyString("url", eventAttributes);
+        String ttclid = getAttributeOrEmptyString("ttclid", userAttributes);
         List<NameValuePair> params = URLEncodedUtils.parse(url, StandardCharsets.UTF_8);
         for (NameValuePair param : params) {
             if (param.getName().endsWith("ttclid")) {
@@ -104,7 +110,7 @@ public class UserData {
             }
         }
         userContext.setClickId(ttclid);
-        userContext.setCookieId(getAttributeOrEmptyString("ttp", eventAttributes));
+        userContext.setCookieId(getAttributeOrEmptyString("ttp", userAttributes));
 
         // update additional user info
         userContext.setFirstName(getAttributeOrEmptyString("$firstname", userAttributes));
@@ -120,7 +126,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        setUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext);
     }
 
     public static void updateUserData(ProductActionEvent event, UserContext userContext) {
@@ -128,7 +134,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        setUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext);
     }
 
     public static void updateUserData(ImpressionEvent event, UserContext userContext) {
@@ -136,7 +142,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        setUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext);
     }
 
     public static void updateUserData(PromotionActionEvent event, UserContext userContext) {
@@ -144,7 +150,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        setUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext);
     }
 
     /**
@@ -165,7 +171,7 @@ public class UserData {
         return "";
     }
 
-    private static String getLocale(RuntimeEnvironment runtimeEnvironment) {
+    private static void setDeviceAttributes(RuntimeEnvironment runtimeEnvironment, UserContext userData) {
         String languageLocale;
         String countryLocale;
         switch (runtimeEnvironment.getType()) {
@@ -199,10 +205,23 @@ public class UserData {
                 languageLocale = tvOsEvn.getLocaleLanguage();
                 countryLocale = tvOsEvn.getLocaleCountry();
                 break;
+            case XBOX:
+                XboxRuntimeEnvironment xboxEnv = (XboxRuntimeEnvironment) runtimeEnvironment;
+                languageLocale = xboxEnv.getLocaleLanguage();
+                countryLocale = xboxEnv.getLocaleCountry();
+                break;
+            case ALEXA:
+            case SMARTTV:
+            case UNKNOWN:
+                GenericRuntimeEnvironment genericEnv = (GenericRuntimeEnvironment) runtimeEnvironment;
+                languageLocale = genericEnv.getLocaleLanguage();
+                countryLocale = genericEnv.getLocaleCountry();
+                break;
             default:
-                return "";
+                languageLocale = "en";
+                countryLocale = "US";
         }
-        return languageLocale + "-" + countryLocale;
+        userData.setLocale(languageLocale.toLowerCase() + "-" + countryLocale.toUpperCase());
     }
 
     private static String checkAndReturnHash(String input) {

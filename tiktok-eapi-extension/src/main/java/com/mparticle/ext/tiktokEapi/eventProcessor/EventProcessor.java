@@ -124,6 +124,43 @@ public class EventProcessor {
         return gson.toJson(eventPayload);
     }
 
+    String captureTikTokEvent(String eventName) {
+        switch (eventName) {
+            case "add_payment_info":
+                return EventName.Name.AddPaymentInfo.toString();
+            case "add_to_cart":
+                return EventName.Name.AddToCart.toString();
+            case "add_to_wishlist":
+                return EventName.Name.AddToWishlist.toString();
+            case "click":
+            case "click_button":
+                return EventName.Name.ClickButton.toString();
+            case "purchase":
+            case "complete_payment":
+                return EventName.Name.CompletePayment.toString();
+            case "initiate_checkout":
+                return EventName.Name.InitiateCheckout.toString();
+            case "view_content":
+                return EventName.Name.ViewContent.toString();
+            case "page_view":
+                return EventName.Name.PageView.toString();
+            case "complete_registration":
+            case "account_creation":
+                return EventName.Name.CompleteRegistration.toString();
+            case "contact":
+                return EventName.Name.Contact.toString();
+            case "download":
+                return EventName.Name.Download.toString();
+            case "place_an_order":
+                return EventName.Name.PlaceAnOrder.toString();
+            case "submit_form":
+                return EventName.Name.SubmitForm.toString();
+            case "subscribe":
+                return EventName.Name.Subscribe.toString();
+        }
+        return eventName;
+    }
+
     public Event getEvent() {
         return event;
     }

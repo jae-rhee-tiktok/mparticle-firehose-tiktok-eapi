@@ -30,14 +30,10 @@ import java.util.*;
  */
 public class TiktokEapiExtension extends MessageProcessor {
 
-    private Logger logger = LogManager.getLogger(TiktokEapiExtension.class);
+    private final Logger logger = LogManager.getLogger(TiktokEapiExtension.class);
 
     //this name will show up in the mParticle UI
     public static final String NAME = "TikTok Events API";
-    //most services require at least an API key to connect to them
-//    public static final String SETTINGS_ACCESS_TOKEN = AccountSettings.SETTINGS_ACCESS_TOKEN;
-//    public static final String SETTINGS_EVENT_SOURCE = AccountSettings.SETTINGS_EVENT_SOURCE;
-//    public static final String SETTING_SETTINGS_EVENT_SOURCE_ID = AccountSettings.SETTINGS_EVENT_SOURCE_ID;
 
     @Override
     public ModuleRegistrationResponse processRegistrationRequest(ModuleRegistrationRequest request) {
@@ -47,21 +43,39 @@ public class TiktokEapiExtension extends MessageProcessor {
         //Set the permissions - the user, device and partner identities that this service can have access to
         Permissions permissions = new Permissions()
             .setAllowAccessIpAddress(true)
+            .setAllowAccessHttpUserAgent(true)
+            .setAllowConsentState(true)
             .setAllowAccessLocation(true)
+            .setAllowAccessDeviceApplicationStamp(true)
+            .setAllowDeviceInformation(true)
+            .setAllowAccessMpid(true)
             .setUserIdentities(Arrays.asList(
-                    new UserIdentityPermission(UserIdentity.Type.MOBILE_NUMBER, Identity.Encoding.SHA256),
-                    new UserIdentityPermission(UserIdentity.Type.PHONE_NUMBER_2, Identity.Encoding.SHA256),
-                    new UserIdentityPermission(UserIdentity.Type.PHONE_NUMBER_3, Identity.Encoding.SHA256),
-                    new UserIdentityPermission(UserIdentity.Type.EMAIL, Identity.Encoding.SHA256),
-                    new UserIdentityPermission(UserIdentity.Type.OTHER2, Identity.Encoding.SHA256),
-                    new UserIdentityPermission(UserIdentity.Type.OTHER3, Identity.Encoding.SHA256),
-                    new UserIdentityPermission(UserIdentity.Type.OTHER4, Identity.Encoding.SHA256),
-                    new UserIdentityPermission(UserIdentity.Type.OTHER5, Identity.Encoding.SHA256),
-                    new UserIdentityPermission(UserIdentity.Type.CUSTOMER, Identity.Encoding.SHA256)))
+                    new UserIdentityPermission(UserIdentity.Type.FACEBOOK, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.MICROSOFT, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.TWITTER, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.GOOGLE, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.YAHOO, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.MOBILE_NUMBER, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.PHONE_NUMBER_2, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.PHONE_NUMBER_3, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.EMAIL, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.OTHER2, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.OTHER3, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.OTHER4, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.OTHER5, Identity.Encoding.RAW),
+                    new UserIdentityPermission(UserIdentity.Type.CUSTOMER, Identity.Encoding.RAW)))
             .setDeviceIdentities(Arrays.asList(
                     new DeviceIdentityPermission(DeviceIdentity.Type.IOS_ADVERTISING_ID, Identity.Encoding.RAW),
                     new DeviceIdentityPermission(DeviceIdentity.Type.IOS_VENDOR_ID, Identity.Encoding.RAW),
                     new DeviceIdentityPermission(DeviceIdentity.Type.ANDROID_ID, Identity.Encoding.RAW),
+                    new DeviceIdentityPermission(DeviceIdentity.Type.GOOGLE_CLOUD_MESSAGING_TOKEN, Identity.Encoding.RAW),
+                    new DeviceIdentityPermission(DeviceIdentity.Type.IOS_ADVERTISING_ID, Identity.Encoding.RAW),
+                    new DeviceIdentityPermission(DeviceIdentity.Type.APPLE_PUSH_NOTIFICATION_TOKEN, Identity.Encoding.RAW),
+                    new DeviceIdentityPermission(DeviceIdentity.Type.ROKU_ADVERTISING_ID, Identity.Encoding.RAW),
+                    new DeviceIdentityPermission(DeviceIdentity.Type.ROKU_PUBLISHER_ID, Identity.Encoding.RAW),
+                    new DeviceIdentityPermission(DeviceIdentity.Type.MICROSOFT_ADVERTISING_ID, Identity.Encoding.RAW),
+                    new DeviceIdentityPermission(DeviceIdentity.Type.MICROSOFT_PUBLISHER_ID, Identity.Encoding.RAW),
+                    new DeviceIdentityPermission(DeviceIdentity.Type.FIRE_ADVERTISING_ID, Identity.Encoding.RAW),
                     new DeviceIdentityPermission(DeviceIdentity.Type.GOOGLE_ADVERTISING_ID, Identity.Encoding.RAW)))
             .setPartnerIdentities(Arrays.asList(
                     new PartnerIdentityPermission("partnerIdentity", Identity.Encoding.RAW)
@@ -104,21 +118,13 @@ public class TiktokEapiExtension extends MessageProcessor {
         //that correlate to each of these event types.
         // TODO: default mappings
         List<Event.Type> supportedEventTypes = Arrays.asList(
-//                Event.Type.SESSION_START,
-//                Event.Type.SESSION_END,
                 Event.Type.CUSTOM_EVENT,
                 Event.Type.SCREEN_VIEW,
-//                Event.Type.ERROR,
-//                Event.Type.PRIVACY_SETTING_CHANGE,
-//                Event.Type.USER_ATTRIBUTE_CHANGE,
                 Event.Type.PUSH_SUBSCRIPTION,
-//                Event.Type.APPLICATION_STATE_TRANSITION,
-//                Event.Type.PUSH_MESSAGE_RECEIPT,
                 Event.Type.PRODUCT_ACTION,
                 Event.Type.PROMOTION_ACTION,
-                Event.Type.IMPRESSION
-//                Event.Type.ATTRIBUTION,
-//                Event.Type.PUSH_MESSAGE_OPEN
+                Event.Type.IMPRESSION,
+                Event.Type.ATTRIBUTION
         );
 
         logger.info("supportedEventTypes: ", supportedEventTypes);
@@ -147,34 +153,12 @@ public class TiktokEapiExtension extends MessageProcessor {
 
         logger.info("eventProcessingRegistration: ", eventProcessingRegistration);
 
-        //Segmentation/Audience registration and processing is treated separately from Event processing
-        //Audience integrations are configured separately in the mParticle UI
-        //Customers can configure a different set of account-level settings (such as API key here), and
-        //Segment-level settings (Mailing List ID here).
-//        List<Setting> subscriptionSettings = new LinkedList<>();
-//        subscriptionSettings.add(new IntegerSetting(SETTING_MAILING_LIST_ID, "Mailing List ID"));
-//
-//        AudienceProcessingRegistration audienceRegistration = new AudienceProcessingRegistration()
-//                .setAccountSettings(processorSettings)
-//                .setAudienceConnectionSettings(subscriptionSettings);
-
-        // Specify the supported DSR request types.
-//        List<DsrProcessingRequest.Type> supportedDsrTypes = Arrays.asList(DsrProcessingRequest.Type.ERASURE);
-
-        // Set up DsrProcessingRegistration object
-//        DsrProcessingRegistration dsrRegistration = new DsrProcessingRegistration()
-//                .setAccountSettings(processorSettings)
-//                .setDomain("tiktok.com")
-//                .setSupportedDsrTypes(supportedDsrTypes);
-
         logger.info("Sending ModuleRegistrationResponse.");
 
         String extensionDescription = "TikTok's Events API is a secure server-to-server integration that allows advertisers to share the actions customers take on their websites, apps, offline or CRM systems directly with TikTok.";
         return new ModuleRegistrationResponse(NAME, "1.0")
                 .setDescription(extensionDescription)
-//                .setAudienceProcessingRegistration(audienceRegistration)
                 .setEventProcessingRegistration(eventProcessingRegistration)
-//                .setDsrProcessingRegistration(dsrRegistration)
                 .setPermissions(permissions);
     }
 

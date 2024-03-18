@@ -33,11 +33,15 @@ public class TikTokEapiExtensionTest  {
         request.setUserAttributes(createUserAttributes());
         request.setUserIdentities(createUserIdentities());
         request.setMpId("test_mp_id");
-        request.setAccount(createOfflineAccount());
+        request.setAccount(createWebAccount());
 
         GenericRuntimeEnvironment genericRuntimeEnvironment = new GenericRuntimeEnvironment();
         genericRuntimeEnvironment.setLocaleCountry("US");
         genericRuntimeEnvironment.setLocaleLanguage("en");
+        genericRuntimeEnvironment.setClientIpAddress("0.0.0.0");
+        genericRuntimeEnvironment.setApplicationName("test_gen_env_app_name");
+        genericRuntimeEnvironment.setApplicationPackage("test_gen_env_pp_package_id");
+        genericRuntimeEnvironment.setApplicationVersion("test_gen_env_app_verision");
 
         request.setRuntimeEnvironment(genericRuntimeEnvironment);
 
@@ -50,13 +54,34 @@ public class TikTokEapiExtensionTest  {
         request.setUserAttributes(createUserAttributes());
         request.setUserIdentities(createUserIdentities());
         request.setMpId("test_mp_id");
-        request.setAccount(createWebAccount());
+        request.setAccount(createOfflineAccount());
 
         UnknownRuntimeEnvironment unknownRuntimeEnvironment = new UnknownRuntimeEnvironment();
         unknownRuntimeEnvironment.setClientIpAddress("0.0.0.0");
         unknownRuntimeEnvironment.setUserAgent(userAgentName);
 
         request.setRuntimeEnvironment(unknownRuntimeEnvironment);
+
+        return request;
+    }
+
+    private EventProcessingRequest createIosAppRequest() {
+        EventProcessingRequest request = new EventProcessingRequest();
+        request.setUserAttributes(createUserAttributes());
+        request.setUserIdentities(createUserIdentities());
+        request.setMpId("test_mp_id");
+        request.setAccount(createAppAccount());
+
+        IosRuntimeEnvironment iosRuntimeEnvironment = new IosRuntimeEnvironment();
+        iosRuntimeEnvironment.setClientIpAddress("0.0.0.0");
+        iosRuntimeEnvironment.setUserAgent(userAgentName);
+        iosRuntimeEnvironment.setLocaleCountry("US");
+        iosRuntimeEnvironment.setLocaleLanguage("en");
+        iosRuntimeEnvironment.setApplicationName("test_ios_app_name");
+        iosRuntimeEnvironment.setApplicationPackage("test_ios_app_package_id");
+        iosRuntimeEnvironment.setApplicationVersion("test_ios_app_version");
+
+        request.setRuntimeEnvironment(iosRuntimeEnvironment);
 
         return request;
     }
@@ -85,6 +110,17 @@ public class TikTokEapiExtensionTest  {
         HashMap<String, String> accSettings = new HashMap<>();
         accSettings.put(AccountSettings.SETTINGS_ACCESS_TOKEN, "b674415eb3a55f1444edfadaebbeaddd98c65070");
         accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE, "web");
+        accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE_ID, "CNP1VUBC77U6D6GPFSC0");
+        accSettings.put(AccountSettings.SETTINGS_CONTENT_TYPE, "product");
+        account.setAccountSettings(accSettings);
+        return account;
+    }
+
+    private Account createAppAccount() {
+        Account account = new Account();
+        HashMap<String, String> accSettings = new HashMap<>();
+        accSettings.put(AccountSettings.SETTINGS_ACCESS_TOKEN, "b674415eb3a55f1444edfadaebbeaddd98c65070");
+        accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE, "app"); // TODO: need to check
         accSettings.put(AccountSettings.SETTINGS_EVENT_SOURCE_ID, "CNP1VUBC77U6D6GPFSC0");
         accSettings.put(AccountSettings.SETTINGS_CONTENT_TYPE, "product");
         account.setAccountSettings(accSettings);
@@ -124,6 +160,9 @@ public class TikTokEapiExtensionTest  {
         userAttributes.put("$country", "test_country");
         userAttributes.put("$state", "test_state");
         userAttributes.put("$zip", "test_zip");
+        userAttributes.put("url", "https://www.test.com?ttclid=test_ttclid_url");
+        userAttributes.put("ttclid", "test_ttclid_user_attr");
+        userAttributes.put("ttp", "test_ttp_id");
         return userAttributes;
     }
 
@@ -136,11 +175,10 @@ public class TikTokEapiExtensionTest  {
 
     private HashMap<String, String> createWebEventAttributes() {
         HashMap<String, String> eventAttributes = new HashMap<>();
-        eventAttributes.put("url", "https://www.tiktok.com?ttclid=test_ttclid");
+        eventAttributes.put("url", "https://www.tiktok.com");
         eventAttributes.put("referrer", "https://www.tiktok.com/redirect");
         eventAttributes.put("description", "test_description");
         eventAttributes.put("query", "test_query");
-        eventAttributes.put("ttp", "test_ttp_id");
         return eventAttributes;
     }
 
@@ -167,7 +205,7 @@ public class TikTokEapiExtensionTest  {
         Permissions permissions = response.getPermissions();
 
         List<UserIdentityPermission> userIdentities = permissions.getUserIdentities();
-        assertEquals(9, userIdentities.size(), "User Identity Permission Check: ");
+        assertEquals(14, userIdentities.size(), "User Identity Permission Check: ");
 
         int email = 0, phone = 0, customer = 0;
         for (UserIdentityPermission userIdentity : userIdentities) {
@@ -185,6 +223,11 @@ public class TikTokEapiExtensionTest  {
                     phone++;
                     break;
                 case CUSTOMER:
+                case YAHOO:
+                case MICROSOFT:
+                case FACEBOOK:
+                case TWITTER:
+                case GOOGLE:
                     customer++;
                     break;
 
@@ -193,10 +236,10 @@ public class TikTokEapiExtensionTest  {
 
         assertEquals(5, email, "TikTok eAPI Extension should register 5 email types: ");
         assertEquals(3, phone, "TikTok eAPI Extension should register 3 phone types: ");
-        assertEquals(1, customer, "TikTok eAPI Extension should register 1 customer type:");
+        assertEquals(6, customer, "TikTok eAPI Extension should register 1 customer type:");
 
         List<DeviceIdentityPermission> deviceIdentityPermissions = permissions.getDeviceIdentities();
-        assertEquals(4, deviceIdentityPermissions.size(), "Device Identity Permission Check: ");
+        assertEquals(12, deviceIdentityPermissions.size(), "Device Identity Permission Check: ");
 
         boolean idfa = false, idfv = false, androidId = false, gaId = false;
         for (DeviceIdentityPermission deviceIdentityPermission : deviceIdentityPermissions) {
@@ -356,7 +399,7 @@ public class TikTokEapiExtensionTest  {
         TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
 
         ProductActionEvent event = new ProductActionEvent();
-        event.setRequest(createUnknownEnvRequest());
+        event.setRequest(createGenericEnvRequest());
         event.setAttributes(createWebEventAttributes());
         event.setProducts(createProductList());
         event.setCurrencyCode("USD");
@@ -375,7 +418,7 @@ public class TikTokEapiExtensionTest  {
         TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
 
         ProductActionEvent event = new ProductActionEvent();
-        event.setRequest(createGenericEnvRequest());
+        event.setRequest(createUnknownEnvRequest());
         event.setAttributes(createOfflineEventAttributes());
         event.setProducts(createProductList());
         event.setCurrencyCode("USD");
@@ -442,7 +485,7 @@ public class TikTokEapiExtensionTest  {
         TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
 
         CustomEvent event = new CustomEvent();
-        event.setRequest(createUnknownEnvRequest());
+        event.setRequest(createGenericEnvRequest());
 
         event.setAttributes(createWebEventAttributes());
 

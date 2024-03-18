@@ -1,10 +1,8 @@
 package com.mparticle.ext.tiktokEapi.utils;
 
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.AdContext;
-import com.mparticle.sdk.model.eventprocessing.CustomEvent;
-import com.mparticle.sdk.model.eventprocessing.ImpressionEvent;
-import com.mparticle.sdk.model.eventprocessing.ProductActionEvent;
-import com.mparticle.sdk.model.eventprocessing.PromotionActionEvent;
+import com.mparticle.ext.tiktokEapi.utils.tiktokApi.AppContext;
+import com.mparticle.sdk.model.eventprocessing.*;
 
 import java.util.Map;
 
@@ -21,6 +19,22 @@ public class AdData {
         adContext.setCreativeId(getAttributeOrEmptyString("creative_id", eventAttributes));
         adContext.setAttributionType(getAttributeOrEmptyString("attribution_type", eventAttributes));
         adContext.setIsRetargeting(getAttributeOrEmptyString("is_targeting", eventAttributes).equalsIgnoreCase("true"));
+    }
+
+    private static void setAppContextDataForIos(RuntimeEnvironment runtimeEnvironment, AdContext adContext) { // Apple Search Ads Attribution Support
+        if (runtimeEnvironment.getType().equals(RuntimeEnvironment.Type.IOS)) {
+            IosRuntimeEnvironment iosEnv = (IosRuntimeEnvironment)runtimeEnvironment;
+            Map<String, String> appleSearchAdsAttribution = iosEnv.getAppleSearchAdsAttribution().get(0);
+
+            adContext.setAdId(getAttributeOrEmptyString("ad_id", appleSearchAdsAttribution));
+            adContext.setAttributed(getAttributeOrEmptyString("iad-attribution", appleSearchAdsAttribution).equalsIgnoreCase("true"));
+//            adContext.setCallback(""); // TODO
+//            adContext.setAttributionProvider(""); // TODO
+            adContext.setCampaignId(getAttributeOrEmptyString("iad-campaign-id", appleSearchAdsAttribution));
+            adContext.setCreativeId(getAttributeOrEmptyString("iad-lineitem-id", appleSearchAdsAttribution));
+            adContext.setAttributionType(getAttributeOrEmptyString("iad-conversion-type", appleSearchAdsAttribution));
+//                adContext.setIsRetargeting(getAttributeOrEmptyString("is_targeting", appleSearchAdsAttribution).equalsIgnoreCase("true")); // TODO
+        }
     }
 
     public static AdContext buildAdContextData(ProductActionEvent event) {
@@ -48,6 +62,14 @@ public class AdData {
         Map<String, String> eventAttributes = event.getAttributes();
         AdContext adContext = new AdContext();
         setAdContextData(eventAttributes, adContext);
+        return adContext;
+    }
+
+    public static AdContext buildAdContextData(AttributionEvent event) {
+        Map<String, String> eventAttributes = event.getAttributes();
+        AdContext adContext = new AdContext();
+        setAdContextData(eventAttributes, adContext);
+        setAppContextDataForIos(event.getRequest().getRuntimeEnvironment(), adContext);
         return adContext;
     }
 

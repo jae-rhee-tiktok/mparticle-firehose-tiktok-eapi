@@ -33,6 +33,15 @@ public class PropertiesContext {
     @SerializedName("promotions")
     private List<Promotion> promotions;
 
+    @SerializedName("tax_amount")
+    private  float taxAmount;
+
+    @SerializedName("shipping_amount")
+    private float shippingAmount;
+
+    @SerializedName("coupon_code")
+    private String couponCode;
+
     public PropertiesContext() {
 
     }
@@ -107,5 +116,29 @@ public class PropertiesContext {
 
     public void setPromotions(List<Promotion> promotions) {
         this.promotions = promotions;
+    }
+
+    public float getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(float taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public float getShippingAmount() {
+        return shippingAmount;
+    }
+
+    public void setShippingAmount(float shippingAmount) {
+        this.shippingAmount = shippingAmount;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 }

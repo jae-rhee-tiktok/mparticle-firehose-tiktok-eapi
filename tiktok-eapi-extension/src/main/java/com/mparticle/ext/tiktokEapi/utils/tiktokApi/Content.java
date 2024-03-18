@@ -20,6 +20,9 @@ public class Content {
     @SerializedName("brand")
     private String brand;
 
+    @SerializedName("coupon_code")
+    private String couponCode;
+
     public Content() {
 
     }
@@ -70,5 +73,13 @@ public class Content {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 }

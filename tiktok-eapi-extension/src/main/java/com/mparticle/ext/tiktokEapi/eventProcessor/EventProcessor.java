@@ -6,9 +6,7 @@ import com.mparticle.ext.tiktokEapi.utils.AccountSettings;
 import com.mparticle.ext.tiktokEapi.utils.TikTokApiClient;
 import com.mparticle.ext.tiktokEapi.utils.UserData;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.*;
-import com.mparticle.sdk.model.eventprocessing.Event;
-import com.mparticle.sdk.model.eventprocessing.ProductActionEvent;
-import com.mparticle.sdk.model.eventprocessing.consent.CCPAConsent;
+import com.mparticle.sdk.model.eventprocessing.*;
 import com.mparticle.sdk.model.registration.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,18 +68,6 @@ public class EventProcessor {
         return eventSource.equalsIgnoreCase("crm");
     }
 
-    public boolean getLdu() {
-        try {
-            CCPAConsent ccpaDataConsent = getEvent().getRequest().getConsentState().getCCPA().get(DEFAULT_CCPA_CONSENT_PURPOSE);
-//            GDPRConsent gdprLocationConsent = getEvent().getRequest().getConsentState().getGDPR().get("location_collection");
-//            GDPRConsent gdprParentalConsent = getEvent().getRequest().getConsentState().getGDPR().get("parental");
-            return ccpaDataConsent.isConsented();
-        } catch (NullPointerException e) {
-            logger.warn("CCPA Consent error. Returning \"false\" for LDU: ", e);
-            return false;
-        }
-    }
-
     public String getTikTokEventName() {
         return getEvent().getType().toString();
     }
@@ -115,7 +101,7 @@ public class EventProcessor {
             eventData.setLead(getLeadContextData());
         }
 
-        eventData.setLdu(getLdu());
+        eventData.setLdu(getEvent().getRequest().getAccount().getBooleanSetting(AccountSettings.SETTINGS_LDU, false, false));
 
         dataArray.add(eventData);
         eventPayload.setData(dataArray);

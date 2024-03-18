@@ -111,6 +111,10 @@ public class TiktokEapiExtension extends MessageProcessor {
                         .setIsConfidential(false)
                         .setDescription("The type of content in the event. Possible values are: \"product\", and \"product_group\".")
         );
+        processorSettings.add(
+                new BooleanSetting(AccountSettings.SETTINGS_LDU, "Limited Data Use")
+                        .setDescription("In order to help facilitate advertiser's compliance with the right to opt-out of sale and sharing of personal data under certain U.S. state privacy laws, TikTok offers a Limited Data Use (\"LDU\") feature.")
+        );
 
         logger.info("processorSettings: ", processorSettings);
 

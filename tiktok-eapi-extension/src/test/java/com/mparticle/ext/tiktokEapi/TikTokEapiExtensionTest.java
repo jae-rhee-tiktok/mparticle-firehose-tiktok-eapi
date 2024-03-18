@@ -264,7 +264,7 @@ public class TikTokEapiExtensionTest  {
         assertTrue(gaId, "TikTok eAPI Extension should register GAID: ");
 
         List<Setting> accountSettings = response.getEventProcessingRegistration().getAccountSettings();
-        assertEquals(4, accountSettings.size(), "Account Settings Check: ");
+        assertEquals(5, accountSettings.size(), "Account Settings Check: ");
 
         boolean accessToken = false, eventSource = false, eventSourceId = false, contentType = false;
         for (Setting accountSetting : accountSettings) {

@@ -295,6 +295,7 @@ public class TikTokEapiExtensionTest  {
         assertTrue(eventTypes.contains(Event.Type.PRODUCT_ACTION), "TikTok eAPI Extension should support product action events: ");
         assertTrue(eventTypes.contains(Event.Type.PROMOTION_ACTION), "TikTok eAPI Extension should support promotion action events: ");
         assertTrue(eventTypes.contains(Event.Type.IMPRESSION), "TikTok eAPI Extension should support impression events: ");
+        assertTrue(eventTypes.contains(Event.Type.ATTRIBUTION), "TikTok eAPI Extension should support attribution events: ");
     }
 
     @Test

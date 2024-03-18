@@ -1,7 +1,6 @@
 package com.mparticle.ext.tiktokEapi.eventProcessor;
 
-import com.mparticle.ext.tiktokEapi.utils.AdData;
-import com.mparticle.ext.tiktokEapi.utils.PropertiesData;
+import com.mparticle.ext.tiktokEapi.utils.*;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.EventName;
 import com.mparticle.sdk.model.eventprocessing.AttributionEvent;
 
@@ -9,7 +8,12 @@ public class AttributionEventProcessor extends EventProcessor {
     public AttributionEventProcessor(AttributionEvent event) {
         super(event);
         this.setPropertiesContextData(PropertiesData.buildPropertiesContextData(event));
-        setAdContextData(AdData.buildAdContextData(event));
+        this.setPageContextData(PageData.buildPageContextData(event));
+        if (checkAppSource()) {
+            this.setAppContextData(AppData.buildAppContextData(event));
+            this.setAdContextData(AdData.buildAdContextData(event));
+        }
+        UserData.updateUserData(event, getUserContextData());
     }
 
     @Override

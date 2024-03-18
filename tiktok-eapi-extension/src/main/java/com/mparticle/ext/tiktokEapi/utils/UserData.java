@@ -137,6 +137,14 @@ public class UserData {
         updateUserContextData(eventAttributes, userAttributes, userContext);
     }
 
+    public static void updateUserData(AttributionEvent event, UserContext userContext) {
+
+        Map<String, String> eventAttributes = event.getAttributes();
+        Map<String, String> userAttributes = event.getRequest().getUserAttributes();
+
+        updateUserContextData(eventAttributes, userAttributes, userContext);
+    }
+
     public static void updateUserData(ImpressionEvent event, UserContext userContext) {
 
         Map<String, String> eventAttributes = event.getAttributes();

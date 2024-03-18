@@ -48,4 +48,11 @@ public class PageData {
         setPageContextData(eventAttributes, pageContextData);
         return pageContextData;
     }
+
+    public static PageContext buildPageContextData(AttributionEvent event) {
+        Map<String,String> eventAttributes = event.getAttributes();
+        PageContext pageContextData = new PageContext();
+        setPageContextData(eventAttributes, pageContextData);
+        return pageContextData;
+    }
 }

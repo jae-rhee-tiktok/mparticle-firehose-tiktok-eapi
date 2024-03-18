@@ -34,6 +34,12 @@ public class AppData {
         return appContext;
     }
 
+    public static AppContext buildAppContextData(AttributionEvent event) {
+        AppContext appContext = new AppContext();
+        setAppContextData(event.getRequest().getRuntimeEnvironment(), appContext);
+        return appContext;
+    }
+
     private static void setAppContextData(RuntimeEnvironment runtimeEnvironment, AppContext appContext) {
         String appId, appName, appVersion;
         switch (runtimeEnvironment.getType()) {

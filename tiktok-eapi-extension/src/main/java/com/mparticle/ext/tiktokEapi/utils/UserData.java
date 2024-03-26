@@ -96,10 +96,23 @@ public class UserData {
             return baseUserData;
         }
 
+        boolean consentCheckGDPRLocation = checkGDPRLocation(event);
+        if (!consentCheckGDPRLocation) {
+            userData.setIp("");
+        }
+
         return userData;
     }
 
-    private static void updateUserContextData(Map<String, String> eventAttributes, Map<String, String> userAttributes, UserContext userContext) {
+    public static boolean checkGDPRLocation(Event event) {
+        try {
+            return event.getRequest().getConsentState().getGDPR().get("location_collection").isConsented();
+        } catch (NullPointerException e) {
+            return true;
+        }
+    }
+
+    private static void updateUserContextData(Map<String, String> eventAttributes, Map<String, String> userAttributes, UserContext userContext, boolean locationConsent) {
         String userAttributeUrl = getAttributeOrEmptyString("url", userAttributes);
         String url = userAttributeUrl != null ? userAttributeUrl : getAttributeOrEmptyString("url", eventAttributes);
         String ttclid = getAttributeOrEmptyString("ttclid", userAttributes);
@@ -115,10 +128,12 @@ public class UserData {
         // update additional user info
         userContext.setFirstName(getAttributeOrEmptyString("$firstname", userAttributes));
         userContext.setLastName(getAttributeOrEmptyString("$lastname", userAttributes));
-        userContext.setCity(getAttributeOrEmptyString("$city", userAttributes));
-        userContext.setCountry(getAttributeOrEmptyString("$country", userAttributes));
-        userContext.setRegion(getAttributeOrEmptyString("$state", userAttributes));
-        userContext.setZip(getAttributeOrEmptyString("$zip", userAttributes));
+        if (!locationConsent) {
+            userContext.setCity(getAttributeOrEmptyString("$city", userAttributes));
+            userContext.setCountry(getAttributeOrEmptyString("$country", userAttributes));
+            userContext.setRegion(getAttributeOrEmptyString("$state", userAttributes));
+            userContext.setZip(getAttributeOrEmptyString("$zip", userAttributes));
+        }
     }
 
     public static void updateUserData(CustomEvent event, UserContext userContext) {
@@ -126,7 +141,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        updateUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext, checkGDPRLocation(event));
     }
 
     public static void updateUserData(ProductActionEvent event, UserContext userContext) {
@@ -134,7 +149,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        updateUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext, checkGDPRLocation(event));
     }
 
     public static void updateUserData(AttributionEvent event, UserContext userContext) {
@@ -142,7 +157,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        updateUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext, checkGDPRLocation(event));
     }
 
     public static void updateUserData(ImpressionEvent event, UserContext userContext) {
@@ -150,7 +165,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        updateUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext, checkGDPRLocation(event));
     }
 
     public static void updateUserData(PromotionActionEvent event, UserContext userContext) {
@@ -158,7 +173,7 @@ public class UserData {
         Map<String, String> eventAttributes = event.getAttributes();
         Map<String, String> userAttributes = event.getRequest().getUserAttributes();
 
-        updateUserContextData(eventAttributes, userAttributes, userContext);
+        updateUserContextData(eventAttributes, userAttributes, userContext, checkGDPRLocation(event));
     }
 
     /**

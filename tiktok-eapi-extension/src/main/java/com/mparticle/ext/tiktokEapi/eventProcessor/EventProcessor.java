@@ -7,6 +7,8 @@ import com.mparticle.ext.tiktokEapi.utils.TikTokApiClient;
 import com.mparticle.ext.tiktokEapi.utils.UserData;
 import com.mparticle.ext.tiktokEapi.utils.tiktokApi.*;
 import com.mparticle.sdk.model.eventprocessing.*;
+import com.mparticle.sdk.model.eventprocessing.consent.CCPAConsent;
+import com.mparticle.sdk.model.eventprocessing.consent.GDPRConsent;
 import com.mparticle.sdk.model.registration.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +36,15 @@ public class EventProcessor {
     }
 
     public void execute() throws IOException {
+        if (!checkGDPRParental()) {
+            logger.info("GDPR Parental Consent: false provided");
+            return;
+        }
+        if (!checkCCPA()) {
+            logger.info("CCPA Consent: false provided");
+            return;
+        }
+
         try {
             TikTokApiClient tikTokApiClient = new TikTokApiClient();
             tikTokApiClient.sendPostRequest(
@@ -46,6 +57,30 @@ public class EventProcessor {
             throw new IOException(e);
         }
 
+    }
+
+    public boolean checkGDPRLocation() {
+        try {
+            return getEvent().getRequest().getConsentState().getGDPR().get("location_collection").isConsented();
+        } catch (NullPointerException e) {
+            return true;
+        }
+    }
+
+    public boolean checkGDPRParental() {
+        try {
+            return getEvent().getRequest().getConsentState().getGDPR().get("parental").isConsented();
+        } catch (NullPointerException e) {
+            return true;
+        }
+    }
+
+    public boolean checkCCPA() {
+        try {
+            return getEvent().getRequest().getConsentState().getCCPA().get("data_sale_opt_out").isConsented();
+        } catch (NullPointerException e) {
+            return true;
+        }
     }
 
     public boolean checkWebSource() {

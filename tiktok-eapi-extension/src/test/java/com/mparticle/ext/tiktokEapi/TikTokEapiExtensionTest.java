@@ -3,6 +3,9 @@ package com.mparticle.ext.tiktokEapi;
 import com.mparticle.ext.tiktokEapi.utils.AccountSettings;
 import com.mparticle.sdk.model.MessageSerializer;
 import com.mparticle.sdk.model.eventprocessing.*;
+import com.mparticle.sdk.model.eventprocessing.consent.CCPAConsent;
+import com.mparticle.sdk.model.eventprocessing.consent.ConsentState;
+import com.mparticle.sdk.model.eventprocessing.consent.GDPRConsent;
 import com.mparticle.sdk.model.registration.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -103,6 +106,133 @@ public class TikTokEapiExtensionTest  {
         request.setRuntimeEnvironment(webRuntimeEnvironment);
 
         return request;
+    }
+
+    private EventProcessingRequest createWebRequestWithCCPA() {
+        EventProcessingRequest request = new EventProcessingRequest();
+
+        request.setUserAttributes(createUserAttributes());
+        request.setUserIdentities(createUserIdentities());
+        request.setMpId("test_mp_id");
+
+        ConsentState consentState = new ConsentState();
+        consentState.setCCPA(createCCPAConsent());
+        request.setConsentState(consentState);
+
+        request.setAccount(createWebAccount());
+
+        WebRuntimeEnvironment webRuntimeEnvironment = new WebRuntimeEnvironment();
+        webRuntimeEnvironment.setClientIpAddress("0.0.0.0");
+        webRuntimeEnvironment.setUserAgent(userAgentName);
+        webRuntimeEnvironment.setLocaleCountry("US");
+        webRuntimeEnvironment.setLocaleLanguage("en");
+
+        request.setRuntimeEnvironment(webRuntimeEnvironment);
+
+        return request;
+    }
+
+    private EventProcessingRequest createWebRequestWithGDPRLocation() {
+        EventProcessingRequest request = new EventProcessingRequest();
+
+        request.setUserAttributes(createUserAttributes());
+        request.setUserIdentities(createUserIdentities());
+        request.setMpId("test_mp_id");
+
+        ConsentState consentState = new ConsentState();
+        Map<String, GDPRConsent> gdprConsentMap = new HashMap<>();
+        gdprConsentMap.put("location_collection", createLocationGDPRConsent());
+        request.setConsentState(consentState);
+
+        request.setAccount(createWebAccount());
+
+        WebRuntimeEnvironment webRuntimeEnvironment = new WebRuntimeEnvironment();
+        webRuntimeEnvironment.setClientIpAddress("0.0.0.0");
+        webRuntimeEnvironment.setUserAgent(userAgentName);
+        webRuntimeEnvironment.setLocaleCountry("US");
+        webRuntimeEnvironment.setLocaleLanguage("en");
+
+        request.setRuntimeEnvironment(webRuntimeEnvironment);
+
+        return request;
+    }
+
+    private EventProcessingRequest createWebRequestWithGDPRParental() {
+        EventProcessingRequest request = new EventProcessingRequest();
+
+        request.setUserAttributes(createUserAttributes());
+        request.setUserIdentities(createUserIdentities());
+        request.setMpId("test_mp_id");
+
+        ConsentState consentState = new ConsentState();
+        Map<String, GDPRConsent> gdprConsentMap = new HashMap<>();
+        gdprConsentMap.put("parental", createParentalGDPRConsent());
+        request.setConsentState(consentState);
+
+        request.setAccount(createWebAccount());
+
+        WebRuntimeEnvironment webRuntimeEnvironment = new WebRuntimeEnvironment();
+        webRuntimeEnvironment.setClientIpAddress("0.0.0.0");
+        webRuntimeEnvironment.setUserAgent(userAgentName);
+        webRuntimeEnvironment.setLocaleCountry("US");
+        webRuntimeEnvironment.setLocaleLanguage("en");
+
+        request.setRuntimeEnvironment(webRuntimeEnvironment);
+
+        return request;
+    }
+
+    private EventProcessingRequest createWebRequestWithGDPRBoth() {
+        EventProcessingRequest request = new EventProcessingRequest();
+
+        request.setUserAttributes(createUserAttributes());
+        request.setUserIdentities(createUserIdentities());
+        request.setMpId("test_mp_id");
+
+        ConsentState consentState = new ConsentState();
+        Map<String, GDPRConsent> gdprConsentMap = new HashMap<>();
+        gdprConsentMap.put("parental", createParentalGDPRConsent());
+        gdprConsentMap.put("location_collection", createLocationGDPRConsent());
+        request.setConsentState(consentState);
+
+        request.setAccount(createWebAccount());
+
+        WebRuntimeEnvironment webRuntimeEnvironment = new WebRuntimeEnvironment();
+        webRuntimeEnvironment.setClientIpAddress("0.0.0.0");
+        webRuntimeEnvironment.setUserAgent(userAgentName);
+        webRuntimeEnvironment.setLocaleCountry("US");
+        webRuntimeEnvironment.setLocaleLanguage("en");
+
+        request.setRuntimeEnvironment(webRuntimeEnvironment);
+
+        return request;
+    }
+
+    private ConsentState createConsentState() {
+        ConsentState consentState = new ConsentState();
+        consentState.setCCPA(createCCPAConsent());
+        Map<String, GDPRConsent> gdprConsentMap = new HashMap<>();
+        gdprConsentMap.put("parental", createParentalGDPRConsent());
+        gdprConsentMap.put("location_collection", createLocationGDPRConsent());
+        return consentState;
+    }
+
+    private CCPAConsent createCCPAConsent() {
+        CCPAConsent ccpaConsent = new CCPAConsent();
+        ccpaConsent.setConsented(false);
+        return ccpaConsent;
+    }
+
+    private GDPRConsent createLocationGDPRConsent() {
+        GDPRConsent gdprConsent = new GDPRConsent();
+        gdprConsent.setConsented(false);
+        return gdprConsent;
+    }
+
+    private GDPRConsent createParentalGDPRConsent() {
+        GDPRConsent gdprConsent = new GDPRConsent();
+        gdprConsent.setConsented(false);
+        return gdprConsent;
     }
 
     private Account createWebAccount() {
@@ -381,7 +511,7 @@ public class TikTokEapiExtensionTest  {
         TiktokEapiExtension tiktokEapiExtension = new TiktokEapiExtension();
 
         ProductActionEvent event = new ProductActionEvent();
-        event.setRequest(createWebRequest());
+        event.setRequest(createWebRequestWithGDPRLocation());
         event.setAttributes(createWebEventAttributes());
         event.setProducts(createProductList());
         event.setCurrencyCode("USD");
@@ -392,6 +522,39 @@ public class TikTokEapiExtensionTest  {
             tiktokEapiExtension.processProductActionEvent(event);
             TimeUnit.SECONDS.sleep(1);
         }
+
+//        for (int i = 0; i < 5; i++) {
+//            ProductActionEvent event = new ProductActionEvent();
+//            switch (i) {
+//                case 0:
+//                    event.setRequest(createWebRequest());
+//                    break;
+//                case 1:
+//                    event.setRequest(createWebRequestWithCCPA());
+//                    break;
+//                case 2:
+//                    event.setRequest(createWebRequestWithGDPRLocation());
+//                    break;
+//                case 3:
+//                    event.setRequest(createWebRequestWithGDPRParental());
+//                    break;
+//                case 4:
+//                    event.setRequest(createWebRequestWithGDPRBoth());
+//                    break;
+//            }
+//            event.setAttributes(createWebEventAttributes());
+//            event.setProducts(createProductList());
+//            event.setCurrencyCode("USD");
+//            event.setTotalAmount(new BigDecimal(500));
+//
+//            for(ProductActionEvent.Action action : ProductActionEvent.Action.values()) {
+//                event.setAction(action);
+//                tiktokEapiExtension.processProductActionEvent(event);
+//                TimeUnit.SECONDS.sleep(1);
+//            }
+//        }
+
+
 
     }
 
